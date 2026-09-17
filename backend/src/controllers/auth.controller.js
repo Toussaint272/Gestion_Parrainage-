@@ -8,11 +8,16 @@ const DUREE = '30d'; // rester connecté 30 jours
 
 /** Signe le token et le pose en cookie HttpOnly (marche aussi pour les PDF ouverts dans un onglet). */
 function poserCookie(res, utilisateur) {
-  const token = jwt.sign({ id: utilisateur.id, identifiant: utilisateur.identifiant, role: utilisateur.role }, SECRET, { expiresIn: DUREE });
-  res.setHeader('Set-Cookie',
-    `token=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}`);
+  const token = jwt.sign(
+    { id: utilisateur.id, identifiant: utilisateur.identifiant, role: utilisateur.role },
+    SECRET,
+    { expiresIn: DUREE }
+  );
+  res.setHeader(
+    'Set-Cookie',
+    `token=${token}; HttpOnly; Path=/; SameSite=None; Secure; Max-Age=${60 * 60 * 24 * 30}`
+  );
 }
-
 /** POST /auth/login — vérifie identifiant + mot de passe, ouvre la session. */
 export const login = async (req, res, next) => {
   try {
@@ -29,10 +34,12 @@ export const login = async (req, res, next) => {
 
 /** POST /auth/logout — ferme la session (supprime le cookie). */
 export const logout = async (req, res) => {
-  res.setHeader('Set-Cookie', 'token=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0');
+  res.setHeader(
+    'Set-Cookie',
+    'token=; HttpOnly; Path=/; SameSite=None; Secure; Max-Age=0'
+  );
   res.json({ success: true, message: 'Déconnecté' });
 };
-
 /** GET /auth/me — infos du compte connecté. */
 export const me = async (req, res) => {
   res.json({ success: true, data: req.utilisateur });

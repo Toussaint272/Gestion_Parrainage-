@@ -4,6 +4,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}`,
   timeout: 60000,
+  withCredentials: true,   // ← AJOUTER CETTE LIGNE
 });
 // Session expirée → retour à la page de connexion (sauf sur la requête de login elle-même).
 api.interceptors.response.use(
