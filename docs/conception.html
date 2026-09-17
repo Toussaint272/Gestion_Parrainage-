@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CotiScola — Dossier de conception technique v1.1</title>
+<style>
+:root{--bleu:#1e3a8a;--bleu2:#2563eb;--vert:#059669;--ambre:#d97706;--rouge:#dc2626;--violet:#7c3aed;--encre:#0f172a;--gris:#475569;--ligne:#e2e8f0;--fond:#eef2f7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:var(--fond);color:var(--encre);line-height:1.55;font-size:15px}
+.page{max-width:1080px;margin:0 auto;padding:26px 18px 90px}
+.cover{background:linear-gradient(135deg,#16296b 0%,#1e3a8a 45%,#2563eb 100%);border-radius:18px;color:#fff;padding:52px 48px 44px;box-shadow:0 12px 34px rgba(30,58,138,.28)}
+.cover-kicker{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:4px 14px;border-radius:999px;font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;font-weight:600}
+.cover h1{font-size:44px;margin:16px 0 6px;letter-spacing:.5px}
+.cover-sub{font-size:17px;color:#dbeafe;max-width:720px}
+.cover-stack{margin-top:26px;display:flex;flex-wrap:wrap;gap:9px}
+.cover-stack span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);padding:5px 13px;border-radius:8px;font-size:13px;font-weight:600}
+.cover-meta{margin-top:26px;font-size:13px;color:#bfdbfe;border-top:1px solid rgba(255,255,255,.22);padding-top:14px}
+section.card{background:#fff;border:1px solid var(--ligne);border-radius:14px;padding:28px 30px;margin:20px 0;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+h2{font-size:22px;color:var(--bleu);border-left:5px solid var(--bleu2);padding-left:12px;margin-bottom:16px}
+h3{font-size:16px;color:var(--encre);margin:20px 0 8px}
+p{margin:8px 0;color:#1e293b}
+ul,ol{margin:8px 0 8px 22px}
+li{margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+th{background:#f1f5f9;text-align:left;color:#0f172a}
+th,td{border:1px solid var(--ligne);padding:7px 10px;vertical-align:top}
+tr:nth-child(even) td{background:#fbfdff}
+code,pre{font-family:'Cascadia Code',Consolas,'Courier New',monospace}
+pre{background:#0f172a;color:#e2e8f0;padding:15px 17px;border-radius:10px;overflow-x:auto;font-size:12.6px;line-height:1.55;margin:12px 0}
+pre .c{color:#7dd3fc}
+code.inline{background:#eef2ff;color:#3730a3;padding:1px 6px;border-radius:5px;font-size:.9em}
+.badge{display:inline-block;padding:2px 11px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.3px}
+.b-opt{background:#f1f5f9;color:#475569;border:1px solid #cbd5e1}
+.b-new{background:#dcfce7;color:#166534}
+.method{font-weight:700;font-family:Consolas,monospace;font-size:11.5px;padding:2px 8px;border-radius:6px;display:inline-block;min-width:52px;text-align:center}
+.get{background:#dcfce7;color:#166534}.post{background:#dbeafe;color:#1e40af}.put{background:#fef3c7;color:#92400e}.del{background:#fee2e2;color:#991b1b}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:2px 30px}
+.toc a{color:#1d4ed8;text-decoration:none;font-size:14px;display:block;padding:4px 0;border-bottom:1px dashed #e2e8f0}
+.toc a:hover{text-decoration:underline}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.note{border-left:4px solid var(--bleu2);background:#eff6ff;padding:11px 15px;border-radius:0 9px 9px 0;font-size:13.5px;margin:13px 0}
+.warn{border-color:var(--ambre);background:#fffbeb}
+.ok{border-color:var(--vert);background:#ecfdf5}
+figure{margin:16px 0;text-align:center}
+figure svg{width:100%;height:auto;max-width:100%}
+figcaption{font-size:12.5px;color:#64748b;margin-top:8px;font-style:italic}
+.swatches{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}
+.sw{width:150px;border:1px solid var(--ligne);border-radius:10px;overflow:hidden;font-size:12px}
+.sw .c{height:44px}.sw .t{padding:7px 10px;background:#fff}
+.sw .t b{display:block;font-size:12.5px}
+svg text{font-family:'Segoe UI',system-ui,Arial,sans-serif}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}.cover{padding:34px 24px}.cover h1{font-size:32px}}
+@media print{body{background:#fff}.page{max-width:none;padding:0}section.card{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}.cover{box-shadow:none}a{color:#1d4ed8}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ================= PAGE DE GARDE ================= -->
+<header class="cover">
+  <div class="cover-kicker">Dossier de conception technique — v1.1</div>
+  <h1>CotiScola</h1>
+  <p class="cover-sub"><b>Application web de gestion des cotisations des parents d'élèves</b><br>
+  Suivi par année scolaire · CRUD complet · Reçus PDF · Email · Barème MVola (frais auto-calculés et arrondis)</p>
+  <div class="cover-stack">
+    <span>React 18 (Vite)</span><span>Node.js 20 / Express 4</span><span>PostgreSQL 16</span>
+    <span>Puppeteer — PDF</span><span>Nodemailer — SMTP</span><span>API REST · JSON</span><span>Barème MVola — frais auto-arrondis</span>
+  </div>
+  <div class="cover-meta">
+    Établi le 12 septembre 2026 · Conçu à partir du classeur de suivi « 23-24 → 26-27 » (Google Sheets)<br>
+    Monnaie : Ariary (Ar) · Document de conception uniquement — pas de code applicatif à ce stade
+  </div>
+</header>
+
+<!-- ================= SOMMAIRE ================= -->
+<section class="card">
+  <h2>Sommaire</h2>
+  <div class="toc">
+    <div>
+      <a href="#s1">1. Contexte, objectifs et périmètre</a>
+      <a href="#s2">2. Analyse de l'existant (le classeur)</a>
+      <a href="#s3">3. Spécifications fonctionnelles</a>
+      <a href="#s4">4. Architecture générale de la solution</a>
+      <a href="#s5">5. Conception de la base de données (PostgreSQL)</a>
+      <a href="#s6">6. Conception de l'API REST (Express)</a>
+      <a href="#s7">7. Conception du frontend (React)</a>
+    </div>
+    <div>
+      <a href="#s8">8. Module PDF — reçus et rapports</a>
+      <a href="#s9">9. Module d'envoi d'emails (PDF joint)</a>
+      <a href="#s10">10. Sécurité</a>
+      <a href="#s11">11. Arborescence des projets</a>
+      <a href="#s12">12. Plan de réalisation &amp; déploiement</a>
+      <a href="#annexe-a">Annexe A — Variables d'environnement</a>
+      <a href="#annexe-b">Annexe B — Correspondance classeur → base</a>
+      <a href="#annexe-c">Annexe C — Barème MVola (frais envoi &amp; retrait)</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1. CONTEXTE ================= -->
+<section class="card" id="s1">
+  <h2>1. Contexte, objectifs et périmètre</h2>
+  <p>Le suivi des cotisations versées par les parents est actuellement tenu dans un <b>classeur Google Sheets</b>
+  (un onglet par année scolaire : 23-24, 24-25, 25-26, 26-27). Le projet consiste à remplacer ce classeur par une
+  <b>application web professionnelle</b> offrant un CRUD complet, un tableau de suivi consolidé identique au classeur,
+  la <b>génération de documents PDF</b> (reçus de paiement, rapport annuel) et leur <b>envoi automatique par email</b>.</p>
+
+  <h3>1.1 Objectifs</h3>
+  <ul>
+    <li>Centraliser et fiabiliser les données : parents, enfants, paiements, frais d’envoi et de retrait (barème MVola), par année scolaire.</li>
+    <li>Supprimer les formules manuelles : totaux, reste à collecter et statistiques calculés automatiquement.</li>
+    <li>Produire des <b>reçus PDF propres</b> pour chaque paiement et un <b>rapport annuel</b> imprimable.</li>
+    <li>Envoyer le PDF au parent <b>par email en un clic</b>, avec journal d'envoi (traçabilité).</li>
+    <li>Conserver l'historique des années scolaires passées (équivalent des onglets 23-24 … 26-27).</li>
+    <li>Importer les données existantes du classeur pour ne rien perdre (cf. annexe B).</li>
+  </ul>
+
+  <h3>1.2 Périmètre</h3>
+  <table>
+    <tr><th style="width:50%">Inclus (v1)</th><th>Exclus (v1 — envisageable en v2)</th></tr>
+    <tr><td>CRUD années scolaires, parents, enfants, paiements, barème des frais (MVola)</td>
+        <td>Portail parent (connexion publique, consultation en ligne)</td></tr>
+    <tr><td>Tableau consolidé type classeur + totaux + reste</td>
+        <td>Paiement en ligne (MVola API, etc.)</td></tr>
+    <tr><td>Génération PDF (reçu, rapport annuel) et envoi par email</td>
+        <td>Application mobile native (le web sera responsive)</td></tr>
+    <tr><td>Tableau de bord (KPI, graphiques) et import du classeur existant</td>
+        <td>Multi-établissements (plusieurs écoles)</td></tr>
+    <tr><td>Authentification JWT simple <span class="badge b-opt">option — phase 2</span></td>
+        <td>Gestion de notes/bulletins scolaires</td></tr>
+  </table>
+
+  <h3>1.3 Acteurs</h3>
+  <table>
+    <tr><th>Acteur</th><th>Rôle</th></tr>
+    <tr><td><b>Secrétaire / Gestionnaire</b></td><td>Utilisateur principal : saisit les parents, enfants et paiements, génère et envoie les PDF.</td></tr>
+    <tr><td><b>Administrateur</b> <span class="badge b-opt">option</span></td><td>Gère les paramètres (frais de référence, SMTP, années) et les comptes utilisateurs.</td></tr>
+    <tr><td><b>Parent</b></td><td>Destinataire passif du reçu PDF par email (pas d'accès à l'application).</td></tr>
+  </table>
+
+  <h3>1.4 Hypothèses de travail</h3>
+  <ul>
+    <li>Les montants sont exprimés en <b>Ariary (Ar)</b>, sans décimales à l'affichage.</li>
+    <li>Le « Total » annuel (ex. <b>7 173 808 Ar</b> pour 26-27) est un <b>montant cible fixe</b>, saisi une fois par année scolaire — confirmé par le client.</li>
+    <li>La colonne « Transferts » = <b>frais d'envoi (transfert à distance) + frais de retrait</b> d'après le barème de l'opérateur (affiche MVola), <b>arrondis au millier supérieur</b> (ex. 6 572 → 7 000).</li>
+    <li>Une ligne du classeur ≈ un <b>parent</b> ; les noms d'enfants (séparés par des virgules) deviennent des entités individuelles.</li>
+    <li>Les localités entre parenthèses (F/tsoa, A/be, Toliara, Tanà, Tuléar, V/marina) correspondent à des <b>villes</b> rattachées au parent.</li>
+  </ul>
+</section>
+
+<!-- ================= 2. ANALYSE DE L'EXISTANT ================= -->
+<section class="card" id="s2">
+  <h2>2. Analyse de l'existant (le classeur Google Sheets)</h2>
+  <p>Le classeur analysé (capture du 12/09/2026, onglet actif « 26-27 ») est structuré ainsi :</p>
+  <table>
+    <tr><th>Élément du classeur</th><th>Contenu constaté</th><th>Transposition applicative</th></tr>
+    <tr><td>Onglets « 23-24 » → « 26-27 »</td><td>Une année de suivi par onglet</td><td>Table <code class="inline">annees_scolaires</code> + filtre global « année active »</td></tr>
+    <tr><td>Col. A — N°</td><td>Numérotation manuelle (trous : 15 absent, 4 sur 2 lignes)</td><td>Numérotation automatique fiable (id + rang affiché)</td></tr>
+    <tr><td>Col. B — Noms de Parents</td><td>« Mme Marie Louise(F/tsoa) », « Sr Jeanne Lucie(Tuléar) »…</td><td><code class="inline">parents.nom_complet</code> + <code class="inline">parents.ville</code></td></tr>
+    <tr><td>Col. C — Noms des Enfants</td><td>Plusieurs prénoms par ligne, séparés par des virgules</td><td>Table <code class="inline">enfants</code> (1 parent → N enfants)</td></tr>
+    <tr><td>Col. D — Sommes</td><td>Montants versés (200 000 à 800 000 Ar)</td><td><code class="inline">paiements.montant</code> (plusieurs versements possibles)</td></tr>
+    <tr><td>Col. E — Transferts</td><td>Frais d’envoi + retrait (total 171 000 Ar)</td><td><code class="inline">paiements.frais_total</code> (barème + arrondi)</td></tr>
+    <tr><td>Ligne TOTAL</td><td>7 173 808 (cible fixe) · 6 930 000 (encaissé) · 171 000 (transferts)</td><td><code class="inline">annees_scolaires.total_cible</code> + vue SQL <code class="inline">v_tableau_annuel</code> + KPI automatiques</td></tr>
+    <tr><td>Ligne RESTE</td><td>72 808</td><td>KPI « Reste à collecter » (règle RG4)</td></tr>
+  </table>
+
+  <div class="note ok"><b>Lecture des totaux confirmée par le client (v1.1) :</b> Reste = Total cible fixe − (Sommes + Transferts)
+  = 7 173 808 − (6 930 000 + 171 000) = <b>72 808 Ar</b>. Le Total n'est pas calculé par l'application : c'est une
+  <b>constante par année</b> (RG2). La formule du Reste est codée dans la règle RG4.</div>
+
+  <h3>2.1 Limites de l'existant</h3>
+  <table>
+    <tr><th>Limite constatée</th><th>Conséquence</th><th>Apport de l'application</th></tr>
+    <tr><td>Saisie 100 % manuelle, formules fragiles</td><td>Risques d'erreur sur totaux et reste</td><td>Calculs centralisés en base (vue SQL)</td></tr>
+    <tr><td>Numérotation manuelle (15 manquant, doublons « Sr Aimée Cécile »)</td><td>Suivi difficile, doublons possibles</td><td>Identifiants uniques, fiches parents, recherche</td></tr>
+    <tr><td>Enfants « écrasés » dans une cellule</td><td>Impossible de suivre un enfant précisément</td><td>Entité <code class="inline">enfants</code> liée au parent</td></tr>
+    <tr><td>Aucun reçu, aucune trace d'envoi</td><td>Preuves de paiement inexistantes</td><td>Reçu PDF numéroté + journal <code class="inline">emails_logs</code></td></tr>
+    <tr><td>Un seul fichier partagé, accès concurrents risqués</td><td>Écrasements de cellules</td><td>Base PostgreSQL + API validée</td></tr>
+    <tr><td>Peu adapté au mobile</td><td>Suivi difficile en déplacement</td><td>Interface React responsive</td></tr>
+  </table>
+</section>
+
+<!-- ================= 3. SPEC FONCTIONNELLES ================= -->
+<section class="card" id="s3">
+  <h2>3. Spécifications fonctionnelles</h2>
+
+  <h3>3.1 Modules</h3>
+  <table>
+    <tr><th style="width:70px">Réf.</th><th>Module</th><th>Contenu</th><th style="width:110px">Priorité</th></tr>
+    <tr><td>M1</td><td>Années scolaires</td><td>CRUD, année « active » sélectionnable, archivage (équivalent des onglets)</td><td><span class="badge b-new">Indispensable</span></td></tr>
+    <tr><td>M2</td><td>Parents &amp; enfants</td><td>CRUD parent (nom, téléphone, email, ville), rattachement de N enfants</td><td><span class="badge b-new">Indispensable</span></td></tr>
+    <tr><td>M3</td><td>Paiements &amp; transferts</td><td>Encaissement par parent et par année : montant, mode (espèces, MVola, Orange Money, Airtel Money, virement), référence, date, plusieurs versements possibles ; frais d’envoi + retrait <b>calculés automatiquement d’après le barème MVola</b> et arrondis au millier supérieur (saisie manuelle possible)</td><td><span class="badge b-new">Indispensable</span></td></tr>
+    <tr><td>M4</td><td>Tableau de suivi</td><td>Vue consolidée type classeur : N°, parent, enfants, sommes, transferts + ligne TOTAL + RESTE, recherche et tri</td><td><span class="badge b-new">Indispensable</span></td></tr>
+    <tr><td>M5</td><td>Documents PDF</td><td>Reçu de paiement individuel + rapport annuel complet (cf. section 8)</td><td><span class="badge b-new">Indispensable</span></td></tr>
+    <tr><td>M6</td><td>Envoi par email</td><td>Envoi du PDF au parent (reçu) ou à la direction (rapport) avec journalisation (cf. section 9)</td><td><span class="badge b-new">Indispensable</span></td></tr>
+    <tr><td>M7</td><td>Tableau de bord</td><td>KPI (dû, encaissé, transferts, reste) + graphique d'évolution des encaissements</td><td><span class="badge">Important</span></td></tr>
+    <tr><td>M8</td><td>Import du classeur</td><td>Script d'import Excel/CSV des onglets 23-24 → 26-27 avec contrôle des totaux</td><td><span class="badge">Important</span></td></tr>
+    <tr><td>M9</td><td>Authentification JWT</td><td>Connexion, rôles admin/agent <span class="badge b-opt">option — phase 2</span></td><td><span class="badge b-opt">Option</span></td></tr>
+    <tr><td>M10</td><td>Barème des frais</td><td>CRUD du barème opérateur (MVola — annexe C) : tranches, frais d’envoi, frais de retrait ; modifiable sans toucher au code en cas de révision des tarifs</td><td><span class="badge b-new">Indispensable</span></td></tr>
+  </table>
+
+  <h3>3.2 User stories principales</h3>
+  <ul>
+    <li><b>US1</b> — En tant que gestionnaire, je sélectionne l'année scolaire active (26-27) et tout l'écran s'y filtre, comme les onglets du classeur.</li>
+    <li><b>US2</b> — Je crée un parent avec sa ville et l'email de réception, puis j'ajoute ses enfants (un ou plusieurs).</li>
+    <li><b>US3</b> — J'enregistre un paiement : dès la saisie du montant, les frais d'envoi + retrait sont <b>calculés automatiquement</b> d'après le barème MVola et <b>arrondis au millier supérieur</b> (modifiables si besoin) ; le tableau, les totaux et le reste se mettent à jour instantanément.</li>
+    <li><b>US4</b> — Je génère le <b>reçu PDF</b> d'un paiement, je le télécharge ou l'<b>envoie par email</b> au parent en un clic.</li>
+    <li><b>US5</b> — J'exporte le <b>rapport annuel PDF</b> (tout le tableau + totaux) et je l'envoie par email à la direction.</li>
+    <li><b>US6</b> — Je consulte l'historique des emails envoyés (destinataire, date, statut succès/échec) et je renvoie en cas d'échec.</li>
+    <li><b>US7</b> — J'archive une année terminée et je crée la nouvelle ; les données restent consultables.</li>
+  </ul>
+
+  <h3>3.3 Règles de gestion</h3>
+  <table>
+    <tr><th style="width:60px">Réf.</th><th>Règle</th></tr>
+    <tr><td>RG1</td><td>Un paiement appartient à <b>un seul parent</b> et à <b>une seule année scolaire</b> ; un parent peut effectuer plusieurs versements.</td></tr>
+    <tr><td>RG2</td><td><b>Total de l'année</b> = montant <b>cible fixe</b> saisi une fois par année scolaire (ex. <b>7 173 808 Ar</b> pour 26-27) — champ <code class="inline">annees_scolaires.total_cible</code>, modifiable dans les Paramètres.</td></tr>
+    <tr><td>RG3</td><td><b>Encaissé</b> = Σ <code class="inline">paiements.montant</code> ; <b>Transferts</b> = Σ <code class="inline">paiements.frais_total</code> (par année).</td></tr>
+    <tr><td>RG4</td><td><b>Reste</b> = Total cible fixe − (Sommes + Transferts) — mêmes termes que la formule client, en valeur positive : 7 173 808 − (6 930 000 + 171 000) = <b>72 808 Ar</b>. Affiché en rouge tant qu’il est positif ; en vert si ≤ 0 (objectif atteint).</td></tr>
+    <tr><td>RG5</td><td>Un parent ayant des paiements ne peut pas être supprimé (suppression refusée → archivage) ; un parent sans paiement est supprimé avec ses enfants (cascade).</td></tr>
+    <tr><td>RG6</td><td>Chaque paiement peut produire un <b>reçu PDF numéroté</b> (format <code class="inline">REC-2627-0042</code>) ; toute tentative d'envoi email est journalisée avec son statut.</td></tr>
+    <tr><td>RG7</td><td>Les montants sont positifs ; le montant d'un paiement ne peut pas être négatif (contrainte base).</td></tr>
+    <tr><td>RG8</td><td>Une seule année scolaire est « active » à la fois dans l'interface ; les autres restent consultables en lecture.</td></tr>
+    <tr><td>RG9</td><td><b>Transfert d'un paiement</b> = frais d'envoi (transfert à distance) + frais de retrait, lus dans <code class="inline">bareme_frais</code> selon la <b>tranche du montant</b> (barème opérateur, ex. MVola — annexe C). Le dépôt est gratuit (0 Ar).</td></tr>
+    <tr><td>RG10</td><td><b>Arrondi</b> : la somme (envoi + retrait) est arrondie au <b>millier supérieur</b> : <code class="inline">frais_total = ceil((envoi+retrait)/1000)×1000</code> — ex. 6 572 → <b>7 000 Ar</b>. Le pas (1 000) et le mode (supérieur) sont paramétrables.</td></tr>
+    <tr><td>RG11</td><td><b>Auto / manuel</b> : dès que l'utilisateur saisit le montant (« Sommes »), le champ Transfert se pré-remplit (RG9 + RG10) ; il reste <b>modifiable</b> — toute saisie manuelle est tracée (<code class="inline">frais_auto = false</code>).</td></tr>
+  </table>
+</section>
+
+<!-- ================= 4. ARCHITECTURE ================= -->
+<section class="card" id="s4">
+  <h2>4. Architecture générale de la solution</h2>
+  <p>Architecture <b>3 tiers</b> classique, découplée par une API REST : le frontend React ne parle jamais directement
+  à la base de données ; toute opération passe par l'API Express, qui concentre la logique métier, la génération PDF et l'envoi email.</p>
+
+  <figure>
+  <svg viewBox="0 0 960 500" role="img" aria-label="Architecture 3 tiers">
+    <defs><marker id="ahArch" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto"><path d="M0,0 L7.5,3 L0,6 Z" fill="#475569"/></marker></defs>
+    <rect x="8" y="16" width="944" height="118" rx="12" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="24" y="40" font-size="11" font-weight="700" fill="#1d4ed8" letter-spacing="1">TIER 1 · PRÉSENTATION (NAVIGATEUR)</text>
+    <rect x="330" y="40" width="300" height="76" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="480" y="66" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Navigateur — React SPA (Vite)</text>
+    <text x="480" y="86" text-anchor="middle" font-size="11" fill="#475569">React 18 · React Router · TanStack Query · Axios</text>
+    <text x="480" y="103" text-anchor="middle" font-size="11" fill="#64748b">Interface responsive (tableau type classeur)</text>
+
+    <rect x="8" y="150" width="944" height="238" rx="12" fill="#f0fdf4" stroke="#dcfce7"/>
+    <text x="24" y="174" font-size="11" font-weight="700" fill="#047857" letter-spacing="1">TIER 2 · APPLICATION (SERVEUR NODE.JS)</text>
+    <rect x="170" y="184" width="620" height="192" rx="10" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+    <text x="480" y="205" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">Serveur d'application — Node.js 20 LTS · Express 4</text>
+    <rect x="190" y="216" width="580" height="26" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="480" y="233" text-anchor="middle" font-size="11" fill="#334155">Middlewares : helmet · cors · morgan · express-rate-limit · validation Zod</text>
+    <rect x="190" y="252" width="138" height="48" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="259" y="270" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Routes REST /api/v1</text>
+    <text x="259" y="284" text-anchor="middle" font-size="9.8" fill="#475569">années · parents · enfants · paiements</text>
+    <rect x="338" y="252" width="138" height="48" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="407" y="270" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Controllers + Services</text>
+    <text x="407" y="284" text-anchor="middle" font-size="9.8" fill="#475569">logique métier · statistiques</text>
+    <rect x="486" y="252" width="138" height="48" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="555" y="270" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Service PDF</text>
+    <text x="555" y="284" text-anchor="middle" font-size="9.8" fill="#475569">Puppeteer · gabarits HTML</text>
+    <rect x="634" y="252" width="138" height="48" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="703" y="270" text-anchor="middle" font-size="10.5" font-weight="700" fill="#065f46">Service Email</text>
+    <text x="703" y="284" text-anchor="middle" font-size="9.8" fill="#475569">Nodemailer · SMTP TLS</text>
+    <rect x="190" y="310" width="580" height="26" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="480" y="327" text-anchor="middle" font-size="11" fill="#334155">Accès données : pg (SQL paramétré) ou Prisma ORM — vue v_tableau_annuel</text>
+    <rect x="190" y="344" width="580" height="24" rx="6" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="480" y="360" text-anchor="middle" font-size="11" fill="#334155">Réponses normalisées { success, data, message } · erreurs centralisées</text>
+
+    <rect x="8" y="404" width="944" height="86" rx="12" fill="#fefce8" stroke="#fef9c3"/>
+    <text x="24" y="428" font-size="11" font-weight="700" fill="#a16207" letter-spacing="1">TIER 3 · DONNÉES &amp; SERVICES EXTERNES</text>
+
+    <line x1="480" y1="116" x2="480" y2="150" stroke="#475569" stroke-width="1.6" marker-end="url(#ahArch)"/>
+    <text x="492" y="138" font-size="11" fill="#334155">HTTPS · REST · JSON</text>
+    <line x1="300" y1="376" x2="300" y2="412" stroke="#475569" stroke-width="1.6" marker-end="url(#ahArch)"/>
+    <text x="308" y="398" font-size="11" fill="#334155">SQL paramétré</text>
+    <line x1="660" y1="376" x2="660" y2="412" stroke="#475569" stroke-width="1.6" marker-end="url(#ahArch)"/>
+    <text x="668" y="398" font-size="11" fill="#334155">TLS :587</text>
+
+    <rect x="195" y="424" width="210" height="42" fill="#ffffff" stroke="#7c3aed"/>
+    <ellipse cx="300" cy="466" rx="105" ry="11" fill="#ffffff" stroke="#7c3aed"/>
+    <ellipse cx="300" cy="424" rx="105" ry="11" fill="#ffffff" stroke="#7c3aed"/>
+    <text x="300" y="451" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4c1d95">PostgreSQL 16</text>
+    <text x="300" y="466" text-anchor="middle" font-size="10.5" fill="#6d28d9">cotisations_db</text>
+    <rect x="560" y="414" width="200" height="64" rx="10" fill="#ffffff" stroke="#d97706" stroke-width="1.4"/>
+    <text x="660" y="440" text-anchor="middle" font-size="13" font-weight="700" fill="#7c2d12">Serveur SMTP</text>
+    <text x="660" y="458" text-anchor="middle" font-size="10.5" fill="#9a3412">Gmail · Brevo · Mailgun (TLS)</text>
+  </svg>
+  <figcaption>Figure 1 — Architecture 3 tiers : React → API REST Express → PostgreSQL, avec services PDF et SMTP</figcaption>
+  </figure>
+
+  <h3>4.1 Choix techniques</h3>
+  <table>
+    <tr><th>Couche</th><th>Technologie</th><th>Justification</th></tr>
+    <tr><td>Frontend</td><td>React 18 + Vite + React Router 6</td><td>SPA rapide, écosystème mature, build optimisé</td></tr>
+    <tr><td>État &amp; données distantes</td><td>TanStack Query 5 + Axios</td><td>Cache, rechargement automatique, mutations CRUD simples</td></tr>
+    <tr><td>Style</td><td>TailwindCSS 3</td><td>Tableau dense type classeur, responsive, cohérence visuelle</td></tr>
+    <tr><td>Backend</td><td>Node.js 20 LTS + Express 4</td><td>Léger, standard de fait, parfait pour API REST + services PDF/mail</td></tr>
+    <tr><td>Base de données</td><td>PostgreSQL 16</td><td>Relationnel strict (parents/enfants/paiements), vues, contraintes, robustesse</td></tr>
+    <tr><td>Accès données</td><td><code class="inline">pg</code> (SQL paramétré) — ou Prisma en variante</td><td>Contrôle total du SQL (vue consolidée), protection injection intégrée</td></tr>
+    <tr><td>PDF</td><td>Puppeteer (HTML/CSS → PDF)</td><td>Reçus et rapports très soignés, gabarits HTML réutilisables (cf. section 8)</td></tr>
+    <tr><td>Email</td><td>Nodemailer 6 + SMTP (Gmail app-password ou Brevo)</td><td>Simple, pièces jointes natives, SMTP configurable par .env</td></tr>
+    <tr><td>Validation</td><td>Zod (serveur) + Zod/react-hook-form (client)</td><td>Une seule définition de schéma, messages d'erreur clairs</td></tr>
+  </table>
+</section>
+
+<!-- ================= 5. BASE DE DONNEES ================= -->
+<section class="card" id="s5">
+  <h2>5. Conception de la base de données (PostgreSQL)</h2>
+
+  <figure>
+  <svg viewBox="0 0 960 500" role="img" aria-label="Modèle conceptuel de données">
+    <!-- PARENTS -->
+    <rect x="40" y="50" width="215" height="24" rx="6" fill="#2563eb"/>
+    <text x="147" y="67" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">PARENTS</text>
+    <rect x="40" y="74" width="215" height="114" fill="#fff" stroke="#cbd5e1"/>
+    <text x="52" y="90" font-size="11" font-weight="700" fill="#0f172a">id</text><text x="247" y="90" font-size="9.5" fill="#94a3b8" text-anchor="end">PK</text>
+    <text x="52" y="109" font-size="11" fill="#334155">nom_complet</text>
+    <text x="52" y="128" font-size="11" fill="#334155">telephone</text>
+    <text x="52" y="147" font-size="11" fill="#334155">email  (requis pour l'envoi)</text>
+    <text x="52" y="166" font-size="11" fill="#334155">ville  (F/tsoa, A/be, Tanà…)</text>
+    <text x="52" y="185" font-size="11" fill="#334155">cree_le</text>
+    <!-- ENFANTS -->
+    <rect x="40" y="300" width="215" height="24" rx="6" fill="#0891b2"/>
+    <text x="147" y="317" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">ENFANTS</text>
+    <rect x="40" y="324" width="215" height="95" fill="#fff" stroke="#cbd5e1"/>
+    <text x="52" y="340" font-size="11" font-weight="700" fill="#0f172a">id</text><text x="247" y="340" font-size="9.5" fill="#94a3b8" text-anchor="end">PK</text>
+    <text x="52" y="359" font-size="11" fill="#334155">parent_id</text><text x="247" y="359" font-size="9.5" fill="#94a3b8" text-anchor="end">FK</text>
+    <text x="52" y="378" font-size="11" fill="#334155">nom_complet</text>
+    <text x="52" y="397" font-size="11" fill="#334155">date_naissance</text>
+    <text x="52" y="416" font-size="11" fill="#334155">cree_le</text>
+    <!-- BAREME -->
+    <rect x="400" y="86" width="230" height="24" rx="6" fill="#ea580c"/>
+    <text x="515" y="103" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">BAREME_FRAIS (MVola…)</text>
+    <rect x="400" y="110" width="230" height="52" fill="#fff" stroke="#cbd5e1"/>
+    <text x="412" y="126" font-size="11" fill="#334155">operateur · type (envoi | retrait)</text>
+    <text x="412" y="143" font-size="11" fill="#334155">tranche_min · tranche_max · frais</text>
+    <text x="412" y="157" font-size="9.8" fill="#64748b" font-style="italic">alimente le calcul auto du Transfert (RG9-RG10)</text>
+    <!-- PAIEMENTS -->
+    <rect x="400" y="170" width="230" height="24" rx="6" fill="#059669"/>
+    <text x="515" y="187" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">PAIEMENTS</text>
+    <rect x="400" y="194" width="230" height="171" fill="#fff" stroke="#cbd5e1"/>
+    <text x="412" y="210" font-size="11" font-weight="700" fill="#0f172a">id</text><text x="618" y="210" font-size="9.5" fill="#94a3b8" text-anchor="end">PK</text>
+    <text x="412" y="229" font-size="11" fill="#334155">parent_id</text><text x="618" y="229" font-size="9.5" fill="#94a3b8" text-anchor="end">FK</text>
+    <text x="412" y="248" font-size="11" fill="#334155">annee_id</text><text x="618" y="248" font-size="9.5" fill="#94a3b8" text-anchor="end">FK</text>
+    <text x="412" y="267" font-size="11" fill="#334155">montant &gt; 0</text>
+    <text x="412" y="286" font-size="11" fill="#334155">frais_envoi · frais_retrait</text>
+    <text x="412" y="305" font-size="11" fill="#334155">mode_paiement (mvola, espèces…)</text>
+    <text x="412" y="324" font-size="11" fill="#334155">frais_total (arrondi RG10) · frais_auto</text>
+    <text x="412" y="343" font-size="11" fill="#334155">reference · date_paiement · cree_le</text>
+    <!-- ANNEES -->
+    <rect x="735" y="50" width="195" height="24" rx="6" fill="#7c3aed"/>
+    <text x="832" y="67" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">ANNEES_SCOLAIRES</text>
+    <rect x="735" y="74" width="195" height="114" fill="#fff" stroke="#cbd5e1"/>
+    <text x="747" y="90" font-size="11" font-weight="700" fill="#0f172a">id</text><text x="918" y="90" font-size="9.5" fill="#94a3b8" text-anchor="end">PK</text>
+    <text x="747" y="109" font-size="11" fill="#334155">libelle  (« 26-27 »)</text>
+    <text x="747" y="128" font-size="11" fill="#334155">date_debut · date_fin</text>
+    <text x="747" y="147" font-size="11" fill="#334155">total_cible (fixe)</text>
+    <text x="747" y="166" font-size="11" fill="#334155">statut (active | archivee)</text>
+    <text x="747" y="185" font-size="11" fill="#334155">cree_le</text>
+    <!-- EMAILS LOGS -->
+    <rect x="735" y="300" width="195" height="24" rx="6" fill="#d97706"/>
+    <text x="832" y="317" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">EMAILS_LOGS</text>
+    <rect x="735" y="324" width="195" height="114" fill="#fff" stroke="#cbd5e1"/>
+    <text x="747" y="340" font-size="11" font-weight="700" fill="#0f172a">id</text><text x="918" y="340" font-size="9.5" fill="#94a3b8" text-anchor="end">PK</text>
+    <text x="747" y="359" font-size="11" fill="#334155">paiement_id</text><text x="918" y="359" font-size="9.5" fill="#94a3b8" text-anchor="end">FK</text>
+    <text x="747" y="378" font-size="11" fill="#334155">destinataire · sujet</text>
+    <text x="747" y="397" font-size="11" fill="#334155">type_document (recu|rapport)</text>
+    <text x="747" y="416" font-size="11" fill="#334155">statut (envoye|echec) · envoye_le</text>
+    <!-- relations -->
+    <line x1="147" y1="188" x2="147" y2="300" stroke="#475569" stroke-width="1.5"/>
+    <text x="153" y="240" font-size="11" font-weight="700" fill="#0f172a">1</text>
+    <text x="153" y="292" font-size="11" font-weight="700" fill="#0f172a">0,N</text>
+    <line x1="255" y1="120" x2="400" y2="240" stroke="#475569" stroke-width="1.5"/>
+    <text x="263" y="126" font-size="11" font-weight="700" fill="#0f172a">1</text>
+    <text x="368" y="236" font-size="11" font-weight="700" fill="#0f172a">0,N</text>
+    <line x1="735" y1="120" x2="630" y2="240" stroke="#475569" stroke-width="1.5"/>
+    <text x="712" y="126" font-size="11" font-weight="700" fill="#0f172a">1</text>
+    <text x="642" y="236" font-size="11" font-weight="700" fill="#0f172a">0,N</text>
+    <line x1="630" y1="340" x2="735" y2="340" stroke="#475569" stroke-width="1.5"/>
+    <text x="640" y="333" font-size="11" font-weight="700" fill="#0f172a">1</text>
+    <text x="700" y="333" font-size="11" font-weight="700" fill="#0f172a">0,N</text>
+    <text x="40" y="470" font-size="10.5" fill="#64748b">PK = clé primaire · FK = clé étrangère · 0,N = zéro ou plusieurs. Suppression d'un parent sans paiement → enfants supprimés en cascade (RG5).</text>
+  </svg>
+  <figcaption>Figure 2 — Modèle conceptuel de données (MCD)</figcaption>
+  </figure>
+
+  <h3>5.1 Schéma SQL (DDL)</h3>
+<pre>-- Base : cotisations_db — PostgreSQL 16
+CREATE TABLE annees_scolaires (
+    id            SERIAL        PRIMARY KEY,
+    libelle       VARCHAR(7)    NOT NULL UNIQUE,           -- « 26-27 »
+    date_debut    DATE          NOT NULL,
+    date_fin      DATE          NOT NULL,
+    total_cible   NUMERIC(12,2) NOT NULL DEFAULT 0,        -- montant cible FIXE de l'année (RG2, ex. 7 173 808)
+    statut        VARCHAR(10)   NOT NULL DEFAULT 'active', -- active | archivee
+    cree_le       TIMESTAMPTZ   NOT NULL DEFAULT now()
+);
+
+CREATE TABLE parents (
+    id           SERIAL      PRIMARY KEY,
+    nom_complet  VARCHAR(120) NOT NULL,
+    telephone    VARCHAR(30),
+    email        VARCHAR(160),                    -- requis pour l'envoi du reçu PDF
+    ville        VARCHAR(60),                     -- Fianarantsoa, Antsirabe, Toliara, Tananarive…
+    adresse      TEXT,
+    cree_le      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE enfants (
+    id               SERIAL       PRIMARY KEY,
+    parent_id        INT          NOT NULL REFERENCES parents(id) ON DELETE CASCADE,
+    nom_complet      VARCHAR(120) NOT NULL,
+    date_naissance   DATE,
+    cree_le          TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_enfants_parent ON enfants(parent_id);
+
+CREATE TABLE paiements (
+    id              SERIAL        PRIMARY KEY,
+    parent_id       INT           NOT NULL REFERENCES parents(id)         ON DELETE RESTRICT,
+    annee_id        INT           NOT NULL REFERENCES annees_scolaires(id) ON DELETE RESTRICT,
+    montant         NUMERIC(12,2) NOT NULL CHECK (montant &gt; 0),        -- « Sommes » (RG7)
+    frais_envoi     NUMERIC(12,2) NOT NULL DEFAULT 0,   -- frais d'envoi barème (RG9)
+    frais_retrait   NUMERIC(12,2) NOT NULL DEFAULT 0,   -- frais de retrait barème (RG9)
+    frais_total     NUMERIC(12,2) NOT NULL DEFAULT 0,   -- colonne « Transferts » (RG10 : arrondi)
+    frais_auto      BOOLEAN       NOT NULL DEFAULT TRUE, -- false si saisi manuellement (RG11)
+    CHECK (frais_envoi &gt;= 0 AND frais_retrait &gt;= 0 AND frais_total &gt;= 0),
+    mode_paiement   VARCHAR(20)   NOT NULL DEFAULT 'especes'
+                    CHECK (mode_paiement IN ('especes','mvola','orange_money',
+                           'airtel_money','virement','autre')),
+    reference       VARCHAR(60),
+    date_paiement   DATE          NOT NULL DEFAULT CURRENT_DATE,
+    note            TEXT,
+    cree_le         TIMESTAMPTZ   NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_paiements_annee  ON paiements(annee_id);
+CREATE INDEX idx_paiements_parent ON paiements(parent_id);
+
+CREATE TABLE bareme_frais (                            -- barème opérateur (MVola — annexe C)
+    id           SERIAL        PRIMARY KEY,
+    operateur    VARCHAR(20)   NOT NULL DEFAULT 'mvola', -- mvola | orange | airtel | autre
+    type_frais   VARCHAR(10)   NOT NULL,                 -- envoi | retrait
+    tranche_min  NUMERIC(12,2) NOT NULL,                 -- ex. 250 001
+    tranche_max  NUMERIC(12,2) NOT NULL,                 -- ex. 500 000
+    frais        NUMERIC(12,2) NOT NULL,                 -- ex. 1 900 (envoi) / 3 400 (retrait)
+    UNIQUE (operateur, type_frais, tranche_min)
+);
+
+CREATE TABLE emails_logs (
+    id             SERIAL       PRIMARY KEY,
+    paiement_id    INT          REFERENCES paiements(id) ON DELETE SET NULL,
+    parent_id      INT          REFERENCES parents(id)   ON DELETE SET NULL,
+    destinataire   VARCHAR(160) NOT NULL,
+    type_document  VARCHAR(20)  NOT NULL,               -- recu | rapport
+    sujet          VARCHAR(200) NOT NULL,
+    statut         VARCHAR(10)  NOT NULL,               -- envoye | echec
+    erreur         TEXT,
+    envoye_le      TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+
+CREATE TABLE utilisateurs (                            -- optionnel (M9, phase 2)
+    id            SERIAL       PRIMARY KEY,
+    nom           VARCHAR(120) NOT NULL,
+    email         VARCHAR(160) NOT NULL UNIQUE,
+    mot_de_passe  VARCHAR(100) NOT NULL,               -- hash bcrypt
+    role          VARCHAR(20)  NOT NULL DEFAULT 'agent', -- admin | agent
+    cree_le       TIMESTAMPTZ  NOT NULL DEFAULT now()
+);</pre>
+
+  <h3>5.2 Vue « tableau consolidé » — le cœur applicatif</h3>
+  <p>Cette vue reproduit <b>exactement</b> le classeur : une ligne par parent, la liste de ses enfants, les sommes
+  et transferts cumulés pour l'année choisie. Les totaux et le reste (RG3, RG4) sont calculés par l'API à partir de cette vue.</p>
+<pre>CREATE VIEW v_tableau_annuel AS
+SELECT a.id    AS annee_id,
+       p.id    AS parent_id,
+       p.nom_complet AS parent,
+       COALESCE(string_agg(e.nom_complet, ', ' ORDER BY e.nom_complet), '—') AS enfants,
+       COALESCE(SUM(pa.montant), 0)          AS sommes,
+       COALESCE(SUM(pa.frais_total), 0)      AS transferts
+FROM       annees_scolaires a
+CROSS JOIN parents p
+LEFT JOIN  enfants  e  ON e.parent_id = p.id
+LEFT JOIN  paiements pa ON pa.parent_id = p.id AND pa.annee_id = a.id
+GROUP BY a.id, p.id, p.nom_complet;</pre>
+
+  <h3>5.3 Dictionnaire de données (extrait synthétique)</h3>
+  <table>
+    <tr><th>Table</th><th>Champs clés</th><th>Contraintes notables</th></tr>
+    <tr><td><b>annees_scolaires</b></td><td>libelle, date_debut, date_fin, <b>total_cible</b>, statut</td><td><code class="inline">libelle UNIQUE</code> ; total_cible = montant fixe (ex. 7 173 808) ; une seule active côté API (RG8)</td></tr>
+    <tr><td><b>parents</b></td><td>nom_complet, telephone, email, ville</td><td>email obligatoirement renseigné avant tout envoi de reçu</td></tr>
+    <tr><td><b>enfants</b></td><td>parent_id, nom_complet, date_naissance</td><td>cascade DELETE avec le parent (si aucun paiement)</td></tr>
+    <tr><td><b>paiements</b></td><td>parent_id, annee_id, montant, frais_envoi, frais_retrait, <b>frais_total</b>, frais_auto, mode_paiement, reference, date_paiement</td><td><code class="inline">montant &gt; 0</code>, frais ≥ 0 ; frais_auto trace l’override manuel (RG11) ; RESTRICT sur parents/années (RG5)</td></tr>
+    <tr><td><b>bareme_frais</b></td><td>operateur, type_frais (envoi|retrait), tranche_min/max, frais</td><td><code class="inline">UNIQUE (operateur, type_frais, tranche_min)</code> ; éditable dans les Paramètres (M10) — <b>les tarifs sont des données, pas du code</b></td></tr>
+    <tr><td><b>emails_logs</b></td><td>destinataire, type_document, statut, erreur, envoye_le</td><td>journal en append-only ; SET NULL si paiement/parent supprimé</td></tr>
+    <tr><td><b>utilisateurs</b> <span class="badge b-opt">opt</span></td><td>email UNIQUE, mot_de_passe (bcrypt), role</td><td>admin | agent ; activée en phase 2</td></tr>
+  </table>
+</section>
+
+<!-- ================= 6. API REST ================= -->
+<section class="card" id="s6">
+  <h2>6. Conception de l'API REST (Express)</h2>
+
+  <h3>6.1 Conventions</h3>
+  <ul>
+    <li><b>Base URL</b> : <code class="inline">/api/v1</code> (versionnée) · format <b>JSON UTF-8</b> sauf endpoints PDF (flux binaire).</li>
+    <li><b>Enveloppe de réponse</b> : <code class="inline">{ "success": true, "message": "…", "data": …, "meta": { page, total } }</code> ;
+        erreur : <code class="inline">{ "success": false, "error": { code, message, details } }</code>.</li>
+    <li><b>Pagination</b> : <code class="inline">?page=1&amp;limit=25</code> · <b>Recherche</b> : <code class="inline">?search=liva</code> · <b>Filtre</b> : <code class="inline">?annee_id=4</code>.</li>
+    <li><b>Codes HTTP</b> : 200 lecture · 201 création · 400 requête invalide · 404 introuvable · 409 conflit/doublon · 422 validation Zod · 500 erreur serveur.</li>
+    <li>Toute entrée est validée par un <b>schéma Zod</b> avant d'atteindre le contrôleur ; tout SQL est paramétré.</li>
+  </ul>
+
+  <h3>6.2 Endpoints</h3>
+  <table>
+    <tr><th style="width:150px">Méthode &amp; route</th><th>Description</th><th style="width:230px">Corps / paramètres</th></tr>
+    <tr><td><span class="method get">GET</span> /annees-scolaires</td><td>Liste des années (onglets) avec statut</td><td>—</td></tr>
+    <tr><td><span class="method post">POST</span> /annees-scolaires</td><td>Créer une année (libellé, dates, <b>total cible fixe</b>)</td><td>{ libelle, date_debut, date_fin, total_cible }</td></tr>
+    <tr><td><span class="method put">PUT</span> /annees-scolaires/:id</td><td>Modifier / activer / archiver une année</td><td>{ …, statut }</td></tr>
+    <tr><td><span class="method del">DELETE</span> /annees-scolaires/:id</td><td>Supprimer (refusée si des paiements existent)</td><td>—</td></tr>
+    <tr><td><span class="method get">GET</span> /parents</td><td>Liste paginée + recherche (nom, ville, téléphone)</td><td>?page, ?limit, ?search, ?ville</td></tr>
+    <tr><td><span class="method post">POST</span> /parents</td><td>Créer un parent</td><td>{ nom_complet, telephone, email, ville }</td></tr>
+    <tr><td><span class="method get">GET</span> /parents/:id</td><td>Fiche parent + liste de ses enfants + total versé</td><td>—</td></tr>
+    <tr><td><span class="method put">PUT</span> /parents/:id</td><td>Modifier un parent</td><td>{ … }</td></tr>
+    <tr><td><span class="method del">DELETE</span> /parents/:id</td><td>Supprimer (refusée si paiements — RG5)</td><td>—</td></tr>
+    <tr><td><span class="method get">GET</span> /parents/:id/enfants</td><td>Enfants du parent</td><td>—</td></tr>
+    <tr><td><span class="method post">POST</span> /enfants</td><td>Ajouter un enfant à un parent</td><td>{ parent_id, nom_complet, date_naissance }</td></tr>
+    <tr><td><span class="method put">PUT</span> /enfants/:id</td><td>Modifier un enfant</td><td>{ … }</td></tr>
+    <tr><td><span class="method del">DELETE</span> /enfants/:id</td><td>Retirer un enfant</td><td>—</td></tr>
+    <tr><td><span class="method get">GET</span> /paiements</td><td>Historique filtrable (année, parent, mode, dates)</td><td>?annee_id, ?parent_id, ?mode, ?du, ?au</td></tr>
+    <tr><td><span class="method post">POST</span> /paiements</td><td>Enregistrer un versement (somme + frais de transfert)</td><td>{ parent_id, annee_id, montant, mode_paiement, types_frais: ["envoi","retrait"], reference, date_paiement, note } — frais calculés côté serveur (RG9-RG11)</td></tr>
+    <tr><td><span class="method put">PUT</span> /paiements/:id</td><td>Corriger un versement</td><td>{ … }</td></tr>
+    <tr><td><span class="method del">DELETE</span> /paiements/:id</td><td>Annuler un versement (motif requis en note)</td><td>—</td></tr>
+    <tr><td><span class="method get">GET</span> /bareme</td><td>Barème complet (par opérateur et par type) — éditable dans les Paramètres</td><td>?operateur=mvola</td></tr>
+    <tr><td><span class="method post">POST</span> /bareme</td><td>Ajouter / modifier une tranche (envoi ou retrait)</td><td>{ operateur, type_frais, tranche_min, tranche_max, frais }</td></tr>
+    <tr><td><span class="method get">GET</span> /bareme/calcul</td><td><b>Calcul automatique des frais</b> pour un montant (RG9 + RG10) — utilisé par le formulaire de paiement</td><td>?montant=300000&amp;operateur=mvola&amp;types=envoi,retrait</td></tr>
+    <tr><td><span class="method get">GET</span> /tableau/:anneeId</td><td><b>Tableau consolidé type classeur</b> + totaux + reste</td><td>?search, ?page</td></tr>
+    <tr><td><span class="method get">GET</span> /statistiques/:anneeId</td><td>KPI + séries pour graphiques du tableau de bord</td><td>—</td></tr>
+    <tr><td><span class="method get">GET</span> /pdf/recu/:paiementId</td><td><b>Reçu PDF</b> (flux binaire téléchargeable)</td><td>→ application/pdf</td></tr>
+    <tr><td><span class="method post">POST</span> /pdf/rapport</td><td><b>Rapport annuel PDF</b> (tableau + totaux)</td><td>{ annee_id }</td></tr>
+    <tr><td><span class="method post">POST</span> /emails/recu/:paiementId</td><td><b>Génère le reçu et l'envoie par email</b> au parent</td><td>— (destinataire = parent.email)</td></tr>
+    <tr><td><span class="method post">POST</span> /emails/rapport</td><td>Génère le rapport et l'envoie par email</td><td>{ annee_id, destinataire }</td></tr>
+    <tr><td><span class="method get">GET</span> /emails/logs</td><td>Journal des envois (statut, erreurs) + renvoi possible</td><td>?annee_id, ?statut</td></tr>
+    <tr><td><span class="method post">POST</span> /auth/login <span class="badge b-opt">opt</span></td><td>Connexion → JWT</td><td>{ email, mot_de_passe }</td></tr>
+  </table>
+
+  <h3>6.3 Exemples d'échanges</h3>
+  <div class="grid2">
+<pre><span class="c">POST /api/v1/paiements — requête</span>
+{
+  "parent_id": 6,
+  "annee_id": 4,
+  "montant": 300000,
+  "mode_paiement": "mvola",
+  "types_frais": ["envoi", "retrait"],
+  "reference": "MV-2026-001234",
+  "date_paiement": "2026-09-12",
+  "note": "2e tranche"
+}</pre>
+<pre><span class="c">201 Created — réponse</span>
+{
+  "success": true,
+  "message": "Paiement enregistré",
+  "data": {
+    "id": 42,
+    "parent": "Mme Hanta (A/be)",
+    "annee": "26-27",
+    "montant": 300000,
+    "frais_envoi": 1900,
+    "frais_retrait": 3400,
+    "frais_total": 6000,
+    "frais_auto": true,
+    "mode_paiement": "mvola",
+    "reference": "MV-2026-001234",
+    "date_paiement": "2026-09-12"
+  }
+}</pre>
+  </div>
+<pre><span class="c">GET /api/v1/tableau/4 — réponse (extrait, reproduit le classeur)</span>
+{
+  "success": true,
+  "data": {
+    "annee": "26-27",
+    "lignes": [
+      { "n": 1, "parent": "Mme Marie Louise (F/tsoa)",
+        "enfants": "Bosco, Jean Luc, Emile", "sommes": 300000, "transferts": 0 },
+      { "n": 2, "parent": "Mr Liva (F/tsoa)",
+        "enfants": "Sonia, Angela", "sommes": 300000, "transferts": 0 }
+    ],
+    "totaux": { "cible": 7173808, "sommes": 6930000,
+                "transferts": 171000, "reste": 72808 }
+  }
+}</pre>
+<pre><span class="c">GET /api/v1/bareme/calcul?montant=300000&amp;operateur=mvola&amp;types=envoi,retrait — calcul auto (RG9 + RG10)</span>
+{
+  "success": true,
+  "data": {
+    "montant": 300000,
+    "tranche": "250 001 – 500 000",
+    "frais_envoi": 1900,
+    "frais_retrait": 3400,
+    "somme_frais": 5300,
+    "frais_total": 6000,
+    "regle": "arrondi au millier supérieur : 6 572 → 7 000 (RG10)"
+  }
+}</pre>
+</section>
+
+<!-- ================= 7. FRONTEND REACT ================= -->
+<section class="card" id="s7">
+  <h2>7. Conception du frontend (React)</h2>
+
+  <h3>7.1 Pages &amp; navigation</h3>
+  <table>
+    <tr><th style="width:140px">Route</th><th style="width:170px">Page</th><th>Contenu</th></tr>
+    <tr><td>/</td><td>Tableau de bord</td><td>KPI de l'année active (dû, encaissé, transferts, reste) + graphique d'évolution mensuelle des encaissements</td></tr>
+    <tr><td>/cotisations</td><td>Suivi des cotisations <span class="badge b-new">écran principal</span></td><td>Le tableau consolidé identique au classeur (figure 3), recherche, tri, saisie rapide d'un paiement, accès PDF/email par ligne</td></tr>
+    <tr><td>/parents</td><td>Parents &amp; enfants</td><td>CRUD parents, fiche détaillée avec enfants, total versé et statut (à jour / reste dû)</td></tr>
+    <tr><td>/paiements</td><td>Paiements</td><td>Historique complet multi-années, filtres (année, parent, mode, période), correction/annulation</td></tr>
+    <tr><td>/rapports</td><td>Rapports &amp; emails</td><td>Génération PDF (reçus, rapport annuel), envoi par email, journal des envois avec renvoi en cas d'échec</td></tr>
+    <tr><td>/parametres</td><td>Paramètres</td><td>Années scolaires (CRUD, active, <b>total cible fixe</b>), <b>barème des frais MVola</b> (M10), pas d’arrondi, test SMTP</td></tr>
+    <tr><td>/connexion</td><td>Connexion <span class="badge b-opt">opt</span></td><td>Formulaire JWT (phase 2)</td></tr>
+  </table>
+
+  <h3>7.2 Maquette de l'écran principal (wireframe)</h3>
+  <figure>
+  <svg viewBox="0 0 960 620" role="img" aria-label="Wireframe écran principal">
+    <rect x="10" y="10" width="940" height="600" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+    <!-- topbar -->
+    <path d="M10,22 a12,12 0 0 1 12,-12 h916 a12,12 0 0 1 12,12 v38 h-940 z" fill="#1e3a8a"/>
+    <text x="34" y="41" font-size="16" font-weight="700" fill="#ffffff">CotiScola</text>
+    <text x="150" y="39" font-size="11.5" fill="#c7d2fe">Tableau de bord</text>
+    <text x="262" y="39" font-size="11.5" font-weight="700" fill="#ffffff">Cotisations</text>
+    <rect x="262" y="50" width="64" height="3" rx="1.5" fill="#60a5fa"/>
+    <text x="362" y="39" font-size="11.5" fill="#c7d2fe">Parents</text>
+    <text x="428" y="39" font-size="11.5" fill="#c7d2fe">Paiements</text>
+    <text x="516" y="39" font-size="11.5" fill="#c7d2fe">Rapports</text>
+    <rect x="660" y="22" width="110" height="28" rx="6" fill="#2b4b9b" stroke="#5b76c4"/>
+    <text x="715" y="40" text-anchor="middle" font-size="11.5" fill="#ffffff">Année : 26-27 ▾</text>
+    <circle cx="905" cy="35" r="13" fill="#3b82f6"/>
+    <text x="905" y="39" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">AD</text>
+    <!-- KPI cards -->
+    <rect x="30" y="78" width="210" height="80" rx="10" fill="#ffffff" stroke="#bfdbfe"/>
+    <text x="44" y="100" font-size="10" font-weight="700" fill="#64748b" letter-spacing="0.5">TOTAL DÛ</text>
+    <text x="44" y="126" font-size="19" font-weight="700" fill="#1d4ed8">7 173 808 Ar</text>
+    <text x="44" y="146" font-size="10" fill="#94a3b8">Montant cible fixe de l’année (RG2)</text>
+    <rect x="260" y="78" width="210" height="80" rx="10" fill="#ffffff" stroke="#a7f3d0"/>
+    <text x="274" y="100" font-size="10" font-weight="700" fill="#64748b" letter-spacing="0.5">ENCAISSÉ (SOMMES)</text>
+    <text x="274" y="126" font-size="19" font-weight="700" fill="#047857">6 930 000 Ar</text>
+    <text x="274" y="146" font-size="10" fill="#94a3b8">Cumul des versements reçus</text>
+    <rect x="490" y="78" width="210" height="80" rx="10" fill="#ffffff" stroke="#ddd6fe"/>
+    <text x="504" y="100" font-size="10" font-weight="700" fill="#64748b" letter-spacing="0.5">FRAIS DE TRANSFERTS</text>
+    <text x="504" y="126" font-size="19" font-weight="700" fill="#6d28d9">171 000 Ar</text>
+    <text x="504" y="146" font-size="10" fill="#94a3b8">Mobile Money · Western Union</text>
+    <rect x="720" y="78" width="210" height="80" rx="10" fill="#ffffff" stroke="#fde68a"/>
+    <text x="734" y="100" font-size="10" font-weight="700" fill="#64748b" letter-spacing="0.5">RESTE À COLLECTER</text>
+    <text x="734" y="126" font-size="19" font-weight="700" fill="#b45309">72 808 Ar</text>
+    <text x="734" y="146" font-size="10" fill="#94a3b8">Cible − (sommes + transferts)</text>
+    <!-- toolbar -->
+    <rect x="30" y="174" width="158" height="34" rx="8" fill="#2563eb"/>
+    <text x="109" y="195" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">+ Nouveau paiement</text>
+    <rect x="198" y="174" width="178" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="287" y="195" text-anchor="middle" font-size="11.5" font-weight="600" fill="#334155">Exporter le rapport PDF</text>
+    <rect x="386" y="174" width="150" height="34" rx="8" fill="#059669"/>
+    <text x="461" y="195" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">Envoyer par email</text>
+    <rect x="560" y="174" width="390" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="574" y="195" font-size="11.5" fill="#94a3b8">Rechercher un parent…</text>
+    <!-- table header -->
+    <rect x="30" y="224" width="900" height="30" fill="#e2e8f0"/>
+    <text x="42" y="243" font-size="11" font-weight="700" fill="#334155">N°</text>
+    <text x="90" y="243" font-size="11" font-weight="700" fill="#334155">Parents</text>
+    <text x="345" y="243" font-size="11" font-weight="700" fill="#334155">Enfants</text>
+    <text x="700" y="243" font-size="11" font-weight="700" fill="#334155" text-anchor="end">Sommes (Ar)</text>
+    <text x="806" y="243" font-size="11" font-weight="700" fill="#334155" text-anchor="end">Transferts (Ar)</text>
+    <text x="882" y="243" font-size="11" font-weight="700" fill="#334155" text-anchor="middle">Actions</text>
+    <!-- rows -->
+    <rect x="30" y="254" width="900" height="30" fill="#ffffff"/><rect x="30" y="284" width="900" height="30" fill="#f8fafc"/>
+    <rect x="30" y="314" width="900" height="30" fill="#ffffff"/><rect x="30" y="344" width="900" height="30" fill="#f8fafc"/>
+    <rect x="30" y="374" width="900" height="30" fill="#ffffff"/><rect x="30" y="404" width="900" height="30" fill="#f8fafc"/>
+    <g font-size="11" fill="#1e293b">
+      <text x="42" y="273">1</text><text x="90" y="273">Mme Marie Louise (F/tsoa)</text><text x="345" y="273">Bosco, Jean Luc, Emile</text><text x="700" y="273" text-anchor="end">300 000</text><text x="806" y="273" text-anchor="end">—</text>
+      <text x="42" y="303">2</text><text x="90" y="303">Mr Liva (F/tsoa)</text><text x="345" y="303">Sonia, Angela</text><text x="700" y="303" text-anchor="end">300 000</text><text x="806" y="303" text-anchor="end">—</text>
+      <text x="42" y="333">5</text><text x="90" y="333">Mme Cyriaque (A/be)</text><text x="345" y="333">Christian, Diary, Bienvenu</text><text x="700" y="333" text-anchor="end">650 000</text><text x="806" y="333" text-anchor="end">—</text>
+      <text x="42" y="363">6</text><text x="90" y="363">Mme Hanta (A/be)</text><text x="345" y="363">Yorik</text><text x="700" y="363" text-anchor="end">300 000</text><text x="806" y="363" text-anchor="end">—</text>
+      <text x="42" y="393">7</text><text x="90" y="393">Mr Hery (A/be)</text><text x="345" y="393">Andrelina</text><text x="700" y="393" text-anchor="end">200 000</text><text x="806" y="393" text-anchor="end">—</text>
+      <text x="42" y="423">24</text><text x="90" y="423">Mme Viviane (F/tsoa)</text><text x="345" y="423">Alida, Bernardo</text><text x="700" y="423" text-anchor="end">300 000</text><text x="806" y="423" text-anchor="end">—</text>
+    </g>
+    <g font-size="9.5" font-weight="700" text-anchor="middle">
+      <rect x="836" y="260" width="40" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/><text x="856" y="273" fill="#1d4ed8">PDF</text>
+      <rect x="882" y="260" width="40" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/><text x="902" y="273" fill="#047857">✉</text>
+      <rect x="836" y="290" width="40" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/><text x="856" y="303" fill="#1d4ed8">PDF</text>
+      <rect x="882" y="290" width="40" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/><text x="902" y="303" fill="#047857">✉</text>
+      <rect x="836" y="320" width="40" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/><text x="856" y="333" fill="#1d4ed8">PDF</text>
+      <rect x="882" y="320" width="40" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/><text x="902" y="333" fill="#047857">✉</text>
+      <rect x="836" y="350" width="40" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/><text x="856" y="363" fill="#1d4ed8">PDF</text>
+      <rect x="882" y="350" width="40" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/><text x="902" y="363" fill="#047857">✉</text>
+      <rect x="836" y="380" width="40" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/><text x="856" y="393" fill="#1d4ed8">PDF</text>
+      <rect x="882" y="380" width="40" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/><text x="902" y="393" fill="#047857">✉</text>
+      <rect x="836" y="410" width="40" height="18" rx="4" fill="#eff6ff" stroke="#bfdbfe"/><text x="856" y="423" fill="#1d4ed8">PDF</text>
+      <rect x="882" y="410" width="40" height="18" rx="4" fill="#ecfdf5" stroke="#a7f3d0"/><text x="902" y="423" fill="#047857">✉</text>
+    </g>
+    <!-- total row -->
+    <rect x="30" y="434" width="900" height="32" fill="#eef2ff"/>
+    <text x="90" y="454" font-size="11.5" font-weight="700" fill="#1e3a8a">TOTAL</text>
+    <text x="700" y="454" font-size="11.5" font-weight="700" fill="#1e3a8a" text-anchor="end">6 930 000</text>
+    <text x="806" y="454" font-size="11.5" font-weight="700" fill="#1e3a8a" text-anchor="end">171 000</text>
+    <text x="30" y="492" font-size="10.5" fill="#64748b">Ligne TOTAL et KPI recalculés automatiquement à chaque opération (vue SQL v_tableau_annuel) — mêmes chiffres que le classeur : dû 7 173 808 · reste 72 808.</text>
+    <text x="480" y="560" text-anchor="middle" font-size="11" fill="#475569">«  ‹  1  2  3  …  24  ›  »</text>
+  </svg>
+  <figcaption>Figure 3 — Wireframe de l'écran « Suivi des cotisations » (année 26-27, données reprises du classeur)</figcaption>
+  </figure>
+
+  <h3>7.3 Composants clés</h3>
+  <table>
+    <tr><th style="width:230px">Composant</th><th>Rôle</th></tr>
+    <tr><td><code class="inline">SelecteurAnnee</code></td><td>Menu global de l'année active ; stockée dans <code class="inline">AnneeActiveContext</code>, tous les appels API s'y filtre (équivalent des onglets)</td></tr>
+    <tr><td><code class="inline">TableauCotisations</code></td><td>Tableau consolidé : en-tête fixe, lignes parents/enfants, colonnes montants alignées à droite, ligne TOTAL, pagination, recherche</td></tr>
+    <tr><td><code class="inline">FormulairePaiement</code></td><td>Modale de saisie (parent, montant, mode, référence, date) validée par Zod ; dès la saisie du montant, appel <code class="inline">GET /bareme/calcul</code> et <b>pré-remplissage du champ Transfert</b> (badge « auto » ; si l’utilisateur le corrige → badge « manuel », RG11) ; mutation TanStack Query + invalidation du tableau</td></tr>
+    <tr><td><code class="inline">FormulaireParent / FormulaireEnfant</code></td><td>Modales CRUD ; contrôle de l'email (indispensable pour l'envoi du reçu)</td></tr>
+    <tr><td><code class="inline">KpiCard</code></td><td>Cartes dû / encaissé / transferts / reste</td></tr>
+    <tr><td><code class="inline">ActionsPaiement</code></td><td>Boutons par ligne : PDF (téléchargement), ✉ email (avec confirmation), modification, suppression</td></tr>
+    <tr><td><code class="inline">JournalEmails</code></td><td>Table des envois avec statut (envoyé / échec) et bouton « renvoyer »</td></tr>
+    <tr><td><code class="inline">Toast / Modal / Spinner / Pagination</code></td><td>Composants UI réutilisables (feedbacks succès/erreur)</td></tr>
+  </table>
+
+  <h3>7.4 Design system</h3>
+  <div class="swatches">
+    <div class="sw"><div class="c" style="background:#1e3a8a"></div><div class="t"><b>Bleu nuit — primaire</b>En-têtes, navigation</div></div>
+    <div class="sw"><div class="c" style="background:#2563eb"></div><div class="t"><b>Bleu — action</b>Boutons, liens, focus</div></div>
+    <div class="sw"><div class="c" style="background:#059669"></div><div class="t"><b>Vert — succès</b>Encaissements, envoi OK</div></div>
+    <div class="sw"><div class="c" style="background:#d97706"></div><div class="t"><b>Ambre — attention</b>Reste à collecter</div></div>
+    <div class="sw"><div class="c" style="background:#dc2626"></div><div class="t"><b>Rouge — danger</b>Suppressions, échecs</div></div>
+    <div class="sw"><div class="c" style="background:#f1f5f9;border-bottom:1px solid #e2e8f0"></div><div class="t"><b>Gris clair — fond</b>Surfaces, bordures</div></div>
+  </div>
+  <ul>
+    <li><b>Typographie</b> : Inter / Segoe UI ; chiffres tabulaires alignés à droite pour les montants ; formats « 7 173 808 Ar ».</li>
+    <li><b>Principes</b> : densité de tableau type classeur, en-tête fixe au défilement, badges de statut, confirmation avant toute suppression ou envoi d'email, messages d'erreur en français.</li>
+    <li><b>Responsive</b> : tableau scrollable horizontalement sur mobile, KPI empilés, boutons d'action en menu contextuel.</li>
+  </ul>
+
+  <h3>7.5 Gestion de l'état</h3>
+  <ul>
+    <li><b>Serveur</b> : TanStack Query — clés <code class="inline">['tableau', anneeId]</code>, <code class="inline">['parents', page, search]</code>, <code class="inline">['paiements', filtres]</code> ; chaque mutation invalide la ou les clés concernées (le tableau se recalcule tout seul).</li>
+    <li><b>Client</b> : <code class="inline">AnneeActiveContext</code> (année sélectionnée, persistée en localStorage) + états locaux de formulaires (react-hook-form + Zod).</li>
+  </ul>
+</section>
+
+<!-- ================= 8. MODULE PDF ================= -->
+<section class="card" id="s8">
+  <h2>8. Module PDF — reçus et rapports</h2>
+
+  <h3>8.1 Choix de la bibliothèque</h3>
+  <table>
+    <tr><th>Option</th><th>Avantages</th><th>Limites</th><th>Verdict</th></tr>
+    <tr><td><b>Puppeteer</b> (HTML/CSS → PDF)</td><td>Rendu très soigné, mise en page CSS, gabarits réutilisables côté email, tableaux longs faciles</td><td>Chromium embarqué (~300 Mo) sur le serveur</td><td><span class="badge b-new">Recommandé</span> — qualité professionnelle des reçus</td></tr>
+    <tr><td>PDFKit (API JavaScript)</td><td>Léger, rapide, aucune dépendance navigateur</td><td>Positionnement manuel de chaque élément, tableaux fastidieux</td><td>Alternative si serveur modeste</td></tr>
+    <tr><td>@react-pdf/renderer</td><td>Composants React déclaratifs</td><td>Couplage des gabarits au frontend</td><td>Non retenu (les PDF relèvent du backend)</td></tr>
+  </table>
+
+  <h3>8.2 Documents produits</h3>
+  <table>
+    <tr><th style="width:170px">Document</th><th>Déclencheur</th><th>Contenu</th></tr>
+    <tr><td><b>Reçu de paiement</b><br><code class="inline">REC-2627-0042.pdf</code></td><td>Clic « PDF » sur une ligne du tableau, ou automatique avant l'envoi email</td><td>En-tête établissement + année scolaire · n° de reçu unique · date · identité du parent (nom, ville, téléphone) · liste des enfants · montant en chiffres <b>et en lettres</b> (« trois cent mille Ariary ») · détail des frais d’envoi et de retrait (arrondis, RG10) · mode et référence de paiement · zone signature · pied de page « généré le … »</td></tr>
+    <tr><td><b>Rapport annuel</b><br><code class="inline">RAPPORT-2627.pdf</code></td><td>Bouton « Exporter le rapport PDF » / envoi email à la direction</td><td>Page de garde · KPI (dû, encaissé, transferts, reste) · tableau complet type classeur (parent, enfants, sommes, transferts) avec totaux · date et heure de génération · pagination automatique</td></tr>
+  </table>
+
+  <h3>8.3 Flux de génération</h3>
+  <ol>
+    <li>L'API charge les données consolidées (paiement + parent + enfants + année) via le service d'accès données.</li>
+    <li>Le service PDF injecte ces données dans un <b>gabarit HTML</b> (<code class="inline">templates/recu.html</code>, styles inline, format A5 pour le reçu, A4 paysage pour le rapport).</li>
+    <li>Puppeteer rend le gabarit en PDF (marges, en-têtes/pieds de page, numérotation) et renvoie un <b>Buffer</b>.</li>
+    <li>Le buffer est soit streamé au navigateur (<code class="inline">Content-Type: application/pdf</code>, <code class="inline">Content-Disposition: attachment</code>), soit transmis au service email comme pièce jointe — <b>le même gabarit sert aux deux usages</b>.</li>
+  </ol>
+  <div class="note ok"><b>Point de conception clé :</b> le PDF est généré <b> côté serveur uniquement</b>, ce qui garantit des documents identiques quel que soit le navigateur et permet l'envoi par email sans intervention de l'utilisateur.</div>
+</section>
+
+<!-- ================= 9. MODULE EMAIL ================= -->
+<section class="card" id="s9">
+  <h2>9. Module d'envoi d'emails (PDF joint)</h2>
+
+  <h3>9.1 Configuration SMTP</h3>
+  <ul>
+    <li><b>Nodemailer</b> avec un transport SMTP configuré par variables d'environnement (annexe A) : Gmail avec mot de passe d'application (rapide à mettre en œuvre) ou Brevo/Mailgun (300+ emails/jour gratuits, recommandé en production).</li>
+    <li>Connexion TLS port 465 (ou 587), expéditeur <code class="inline">MAIL_FROM</code> unique et identique à l'utilisateur authentifié (anti-spam).</li>
+    <li>Un bouton « Tester la configuration » dans les Paramètres envoie un email de vérification.</li>
+  </ul>
+
+  <h3>9.2 Diagramme de séquence — « Envoyer le reçu par email »</h3>
+  <figure>
+  <svg viewBox="0 0 960 470" role="img" aria-label="Diagramme de séquence envoi PDF par email">
+    <defs><marker id="ahSeq" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto"><path d="M0,0 L7.5,3 L0,6 Z" fill="#475569"/></marker></defs>
+    <rect x="25" y="24" width="110" height="38" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="80" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Utilisateur</text>
+    <rect x="195" y="24" width="110" height="38" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="250" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">Interface React</text>
+    <rect x="375" y="24" width="110" height="38" rx="8" fill="#dcfce7" stroke="#059669"/>
+    <text x="430" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">API Express</text>
+    <rect x="535" y="24" width="110" height="38" rx="8" fill="#ede9fe" stroke="#7c3aed"/>
+    <text x="590" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#5b21b6">PostgreSQL</text>
+    <rect x="685" y="24" width="110" height="38" rx="8" fill="#ffedd5" stroke="#d97706"/>
+    <text x="740" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">Service PDF</text>
+    <rect x="835" y="24" width="110" height="38" rx="8" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="890" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">SMTP</text>
+    <g stroke="#cbd5e1" stroke-dasharray="4 4">
+      <line x1="80" y1="62" x2="80" y2="440"/><line x1="250" y1="62" x2="250" y2="440"/><line x1="430" y1="62" x2="430" y2="440"/>
+      <line x1="590" y1="62" x2="590" y2="440"/><line x1="740" y1="62" x2="740" y2="440"/><line x1="890" y1="62" x2="890" y2="440"/>
+    </g>
+    <g stroke="#475569" stroke-width="1.5">
+      <line x1="80" y1="95" x2="250" y2="95" marker-end="url(#ahSeq)"/>
+      <line x1="250" y1="125" x2="430" y2="125" marker-end="url(#ahSeq)"/>
+      <line x1="430" y1="155" x2="590" y2="155" marker-end="url(#ahSeq)"/>
+      <line x1="590" y1="185" x2="430" y2="185" stroke-dasharray="5 4"/>
+      <line x1="430" y1="215" x2="740" y2="215" marker-end="url(#ahSeq)"/>
+      <line x1="740" y1="245" x2="430" y2="245" stroke-dasharray="5 4"/>
+      <line x1="430" y1="275" x2="890" y2="275" marker-end="url(#ahSeq)"/>
+      <line x1="890" y1="305" x2="430" y2="305" stroke-dasharray="5 4"/>
+      <line x1="430" y1="335" x2="590" y2="335" marker-end="url(#ahSeq)"/>
+      <line x1="430" y1="365" x2="250" y2="365" stroke-dasharray="5 4"/>
+      <line x1="250" y1="395" x2="80" y2="395" stroke-dasharray="5 4"/>
+    </g>
+    <g font-size="10.5" fill="#334155">
+      <text x="165" y="88" text-anchor="middle">1 · clic « Envoyer le reçu »</text>
+      <text x="340" y="118" text-anchor="middle">2 · POST /api/v1/emails/recu/42</text>
+      <text x="510" y="148" text-anchor="middle">3 · SELECT paiement + parent + enfants</text>
+      <text x="510" y="178" text-anchor="middle">4 · lignes de données</text>
+      <text x="585" y="208" text-anchor="middle">5 · genererRecu(donnees)</text>
+      <text x="585" y="238" text-anchor="middle">6 · buffer PDF</text>
+      <text x="660" y="268" text-anchor="middle">7 · sendMail(message HTML + recu-0042.pdf)</text>
+      <text x="660" y="298" text-anchor="middle">8 · 250 OK / erreur</text>
+      <text x="510" y="328" text-anchor="middle">9 · INSERT emails_logs (statut)</text>
+      <text x="340" y="358" text-anchor="middle">10 · 200 OK { message }</text>
+      <text x="165" y="388" text-anchor="middle">11 · toast « Email envoyé au parent »</text>
+    </g>
+    <rect x="300" y="410" width="420" height="42" rx="8" fill="#fffbeb" stroke="#fde68a"/>
+    <text x="510" y="428" text-anchor="middle" font-size="10.5" fill="#92400e">En cas d'échec SMTP : statut « echec » journalisé (emails_logs),</text>
+    <text x="510" y="443" text-anchor="middle" font-size="10.5" fill="#92400e">toast rouge côté interface, renvoi possible depuis le journal des envois.</text>
+  </svg>
+  <figcaption>Figure 4 — Séquence complète : génération du PDF puis envoi email journalisé</figcaption>
+  </figure>
+
+  <h3>9.3 Contenu du message et journalisation</h3>
+  <ul>
+    <li><b>Objet</b> : « Reçu de paiement REC-2627-0042 — Année 26-27 ».</li>
+    <li><b>Corps</b> : gabarit HTML aux styles inline (compatibilité Gmail/Outlook) — remerciement, rappel du montant, mention de la pièce jointe, signature de l'établissement.</li>
+    <li><b>Pièce jointe</b> : <code class="inline">recu-0042.pdf</code> (buffer produit par le service PDF, sans écriture disque nécessaire).</li>
+    <li><b>Journal</b> : chaque tentative est enregistrée dans <code class="inline">emails_logs</code> (destinataire, type, statut <code class="inline">envoye|echec</code>, message d'erreur, horodatage) — base de l'écran « Rapports &amp; emails » et des renvois.</li>
+  </ul>
+
+<pre><span class="c">// services/email.service.js — logique cible (extrait de conception)</span>
+async function envoyerRecu(paiementId) {
+  const data = await repo.getPaiementComplet(paiementId);  // 3. données
+  if (!data.parent.email) throw new AppError(422, 'Email du parent manquant');
+  const pdf = await pdfService.genererRecu(data);          // 5-6. buffer PDF
+  const info = await transporter.sendMail({                // 7. envoi
+    from: process.env.MAIL_FROM,
+    to: data.parent.email,
+    subject: `Reçu de paiement ${data.numeroRecu} — Année ${data.annee}`,
+    html: gabarits.emailRecu(data),
+    attachments: [{ filename: `recu-${data.numeroRecu}.pdf`, content: pdf }],
+  });
+  await repo.journaliserEnvoi({ paiementId, destinataire: data.parent.email,
+    statut: info.accepted.length ? 'envoye' : 'echec', erreur: null });
+  return { message: 'Email envoyé au parent' };            // 10. réponse
+}</pre>
+</section>
+
+<!-- ================= 10. SECURITE ================= -->
+<section class="card" id="s10">
+  <h2>10. Sécurité</h2>
+  <table>
+    <tr><th style="width:250px">Risque</th><th>Mesure de conception</th></tr>
+    <tr><td>Injection SQL</td><td>Requêtes 100 % paramétrées (<code class="inline">pg</code> / Prisma) — aucune concaténation de chaînes SQL</td></tr>
+    <tr><td>XSS</td><td>Échappement automatique React ; en-têtes <code class="inline">helmet</code> avec Content-Security-Policy ; pas de <code class="inline">dangerouslySetInnerHTML</code></td></tr>
+    <tr><td>Données invalides / corruptibles</td><td>Validation <b>Zod</b> systématique côté serveur (et côté client) ; contraintes CHECK en base</td></tr>
+    <tr><td>Force brute sur les endpoints</td><td><code class="inline">express-rate-limit</code> (ex. 100 req/min/IP) ; limite renforcée sur /auth/login</td></tr>
+    <tr><td>Accès non autorisés <span class="badge b-opt">opt</span></td><td>JWT signé, mots de passe bcrypt (10 tours), rôles admin/agent, middleware d'authentification global</td></tr>
+    <tr><td>Fuite de secrets</td><td>Variables d'environnement (.env hors Git), secrets différents par environnement</td></tr>
+    <tr><td>CORS abusif</td><td>Origine unique autorisée : l'URL du frontend (<code class="inline">CORS_ORIGIN</code>)</td></tr>
+    <tr><td>Interception réseau</td><td>HTTPS obligatoire en production (reverse proxy Nginx + certificat Let's Encrypt)</td></tr>
+    <tr><td>Perte de données</td><td>Sauvegarde automatique quotidienne <code class="inline">pg_dump</code> + rétention 30 jours ; test de restauration mensuel</td></tr>
+    <tr><td>Abus d'envoi email</td><td>Confirmation avant envoi, quotas, journal complet, désactivation possible du module</td></tr>
+    <tr><td>Données personnelles</td><td>Accès restreint à l'application, emails visibles uniquement aux utilisateurs connectés, suppression sur demande du parent</td></tr>
+  </table>
+</section>
+
+<!-- ================= 11. ARBORESCENCE ================= -->
+<section class="card" id="s11">
+  <h2>11. Arborescence des projets</h2>
+  <div class="grid2">
+<pre><span class="c">backend/</span>
+├─ src/
+│  ├─ config/        # db.js (Pool pg), env.js, smtp.js
+│  ├─ middlewares/   # validate.js, errorHandler.js, auth.js
+│  ├─ routes/        # annees, parents, enfants, paiements,
+│  │                 # tableau, stats, pdf, emails, auth
+│  ├─ controllers/   # logique HTTP par ressource
+│  ├─ services/      # metier.js, stats.service.js,
+│  │                 # pdf.service.js, email.service.js
+│  ├─ templates/     # recu.html, rapport.html, email-recu.html
+│  ├─ validators/    # schémas Zod par ressource
+│  ├─ utils/         # montantEnLettres.js, numeroRecu.js
+│  ├─ app.js         # Express + middlewares globaux
+│  └─ server.js      # démarrage
+├─ sql/              # 01_schema.sql, 02_views.sql, 03_seed.sql
+├─ scripts/          # import-excel.js (SheetJS), backup.sh
+├─ .env.example
+└─ package.json</pre>
+<pre><span class="c">frontend/</span>
+├─ src/
+│  ├─ api/           # client.js (axios), annees.js, parents.js,
+│  │                 # enfants.js, paiements.js, tableau.js,
+│  │                 # pdf.js, emails.js
+│  ├─ components/
+│  │  ├─ layout/     # Sidebar, Topbar, SelecteurAnnee
+│  │  ├─ tableau/    # TableauCotisations, LigneTotal, Recherche
+│  │  ├─ forms/      # FormulaireParent/Enfant/Paiement (modales)
+│  │  ├─ emails/     # JournalEmails, BoutonEnvoi
+│  │  └─ ui/         # KpiCard, Modal, Toast, Spinner, Pagination
+│  ├─ pages/         # Dashboard, Cotisations, Parents,
+│  │                 # Paiements, Rapports, Parametres
+│  ├─ hooks/         # useAnnees, useTableau, usePaiements…
+│  ├─ context/       # AnneeActiveContext
+│  ├─ App.jsx        # routes React Router
+│  └─ main.jsx
+└─ package.json</pre>
+  </div>
+  <div class="note"><b>Ports en développement</b> : frontend Vite sur 5173 · API Express sur 5000 · PostgreSQL sur 5432.
+  Le frontend appelle l'API via un proxy Vite (<code class="inline">/api</code> → <code class="inline">http://localhost:5000</code>) pour éviter tout souci de CORS en local.</div>
+</section>
+
+<!-- ================= 12. PLAN ================= -->
+<section class="card" id="s12">
+  <h2>12. Plan de réalisation &amp; déploiement</h2>
+  <table>
+    <tr><th style="width:70px">Phase</th><th>Contenu</th><th style="width:200px">Livrable</th><th style="width:90px">Charge</th></tr>
+    <tr><td>P1</td><td>Cadrage &amp; conception (ce document), validation des règles RG1→RG11</td><td>Dossier de conception v1.0 → v1.1</td><td>0,5 j</td></tr>
+    <tr><td>P2</td><td>Base de données : schéma, vues, index, <b>seed du barème MVola (annexe C)</b>, données de test, <b>script d'import du classeur</b></td><td>cotisations_db opérationnelle</td><td>2,5 j</td></tr>
+    <tr><td>P3</td><td>Backend : CRUD années/parents/enfants/paiements + tableau + statistiques (tests Postman)</td><td>API REST complète</td><td>4 j</td></tr>
+    <tr><td>P4</td><td>Frontend : layout, sélecteur d'année, écran cotisations, CRUD parents &amp; paiements, dashboard</td><td>Interface utilisable</td><td>5 j</td></tr>
+    <tr><td>P5</td><td>Module PDF : gabarits reçu + rapport, endpoints de génération</td><td>Reçus &amp; rapports conformes</td><td>2 j</td></tr>
+    <tr><td>P6</td><td>Module email : SMTP, envoi reçu/rapport, journal + renvoi</td><td>Envoi PDF par email</td><td>1,5 j</td></tr>
+    <tr><td>P7</td><td>Sécurité, gestion d'erreurs, tests de recette avec données réelles</td><td>Application stabilisée</td><td>2 j</td></tr>
+    <tr><td>P8</td><td>Déploiement, sauvegardes, formation de l'utilisateur</td><td>Mise en production</td><td>1,5 j</td></tr>
+    <tr><td colspan="2"><b>Total indicatif</b></td><td></td><td><b>≈ 19 j</b></td></tr>
+  </table>
+
+  <h3>12.1 Déploiement cible</h3>
+  <ul>
+    <li><b>Développement</b> : poste local — Node 20, PostgreSQL 16, Vite dev server (5173) proxifié vers l'API (5000).</li>
+    <li><b>Production (VPS ou VM)</b> : Nginx en reverse proxy (front statique du build Vite + proxy <code class="inline">/api</code> vers Express géré par PM2), HTTPS Let's Encrypt, PostgreSQL local avec sauvegardes pg_dump quotidiennes. Variante conteneurisée : <code class="inline">docker-compose</code> (nginx + api + postgres).</li>
+    <li><b>Stratégie d'années scolaires</b> : à chaque rentrée, créer la nouvelle année (ex. 27-28) et archiver l'ancienne — aucune migration nécessaire, contrairement aux onglets du classeur.</li>
+  </ul>
+  <div class="note ok"><b>Critères d'acceptation (extrait)</b> : le tableau de l'année 26-27 importé doit reproduire les totaux du classeur
+  (dû 7 173 808 · encaissé 6 930 000 · transferts 171 000 · reste 72 808) ; un paiement saisi met à jour les totaux en moins d'une seconde ;
+  un reçu PDF est envoyé en moins de 10 secondes avec trace dans le journal.</div>
+</section>
+
+<!-- ================= ANNEXES ================= -->
+<section class="card" id="annexe-a">
+  <h2>Annexe A — Variables d'environnement (.env)</h2>
+<pre><span class="c"># Serveur</span>
+PORT=5000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:5173
+
+<span class="c"># Base de données</span>
+DATABASE_URL=postgresql://cotisa:motdepasse@localhost:5432/cotisations_db
+
+<span class="c"># Email (SMTP) — Gmail avec mot de passe d'application, ou Brevo/Mailgun</span>
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=etablissement@gmail.com
+SMTP_PASS=mot-de-passe-application-16-caracteres
+MAIL_FROM="Cotisations École &lt;etablissement@gmail.com&gt;"
+
+<span class="c"># PDF</span>
+PDF_ENGINE=puppeteer
+
+<span class="c"># Frais de transfert — arrondi (RG10)</span>
+ARRONDI_PAS=1000
+
+<span class="c"># Sécurité (phase 2, option JWT)</span>
+JWT_SECRET=chaine-aleatoire-tres-longue
+JWT_EXPIRES=8h</pre>
+</section>
+
+<section class="card" id="annexe-b">
+  <h2>Annexe B — Correspondance classeur → base de données (script d'import)</h2>
+  <p>Le script <code class="inline">scripts/import-excel.js</code> (SheetJS) parcourt chaque onglet du classeur exporté (.xlsx) et alimente la base :</p>
+  <table>
+    <tr><th style="width:320px">Élément du classeur</th><th>Cible dans PostgreSQL</th></tr>
+    <tr><td>Onglet « 23-24 » … « 26-27 »</td><td>1 ligne dans <code class="inline">annees_scolaires</code> (libellé de l'onglet ; 26-27 active, les autres archivées)</td></tr>
+    <tr><td>Col. B « Noms de Parents » — « Mme Marie Louise(F/tsoa) »</td><td><code class="inline">parents.nom_complet</code> + <code class="inline">parents.ville</code> (sigle entre parenthèses décodé : F/tsoa → Fianarantsoa, A/be → Antsirabe, Tanà → Antananarivo, Tuléar → Toliara…)</td></tr>
+    <tr><td>Col. C « Noms des Enfants » — « Bosco, Jean Luc, Emile »</td><td>3 lignes dans <code class="inline">enfants</code> rattachées au parent (dédoublonnage par parent+nom)</td></tr>
+    <tr><td>Col. D « Sommes » — 300 000</td><td>1 ligne dans <code class="inline">paiements</code> (montant, mode <code class="inline">autre</code>, note « importé du classeur »)</td></tr>
+    <tr><td>Col. E « Transferts » — ex. 171 000 cumulés</td><td><code class="inline">paiements.frais_total</code> (frais d’envoi + retrait de la ligne, tels qu’inscrits dans le classeur)</td></tr>
+    <tr><td>Lignes TOTAL / RESTE</td><td>Ne sont pas importées : recalculées par <code class="inline">v_tableau_annuel</code> puis <b>comparées</b> au classeur comme contrôle d'intégrité de l'import</td></tr>
+  </table>
+  <div class="note warn"><b>Points à confirmer avant l'import</b> : le libellé exact des localités (F/tsoa, A/be, V/marina…) ; l'adresse email de chaque parent
+  (colonne absente du classeur — à collecter, sinon l'envoi du reçu sera impossible pour les lignes concernées) ;
+  le mode de paiement d'origine de chaque versement (espèces, MVola…).</div>
+</section>
+
+
+<section class="card" id="annexe-c">
+  <h2>Annexe C — Barème MVola : frais d'envoi &amp; de retrait (relevé affiche)</h2>
+  <p>Barème relevé sur l'affiche officielle MVola (numéros 032 / 033 / 034 / 037 / 038 — <b>dépôt gratuit</b>).
+  Il est chargé dans la table <code class="inline">bareme_frais</code> (seed P2) et reste <b>entièrement modifiable dans les Paramètres</b> (M10) :
+  en cas de révision des tarifs par l'opérateur, <b>aucune modification de code</b> n'est nécessaire.
+  <b>À valider auprès de l'agence</b> : le haut de l'affiche est partiellement tronqué sur la photo (1<sup>re</sup> ligne).</p>
+  <table>
+    <tr><th>Tranche du montant (Ar)</th><th style="text-align:right">Envoi à distance (Ar)</th><th style="text-align:right">Retrait (Ar)</th><th style="text-align:right">Total frais (RG9)</th><th style="text-align:right">Arrondi millier sup. (RG10)</th></tr>
+    <tr><td>… et 1 000 (tronqué sur la photo) Ar</td><td style="text-align:right">70</td><td style="text-align:right" title="tronqué sur la photo">n.l.</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+    <tr><td>1 001 et 5 000 Ar</td><td style="text-align:right">70</td><td style="text-align:right">100</td><td style="text-align:right"><b>170</b></td><td style="text-align:right"><b>1 000</b></td></tr>
+    <tr><td>5 001 et 10 000 Ar</td><td style="text-align:right">150</td><td style="text-align:right">150</td><td style="text-align:right"><b>300</b></td><td style="text-align:right"><b>1 000</b></td></tr>
+    <tr><td>10 001 et 20 000 Ar</td><td style="text-align:right">250</td><td style="text-align:right">275</td><td style="text-align:right"><b>525</b></td><td style="text-align:right"><b>1 000</b></td></tr>
+    <tr><td>20 001 et 25 000 Ar</td><td style="text-align:right">250</td><td style="text-align:right">550</td><td style="text-align:right"><b>800</b></td><td style="text-align:right"><b>1 000</b></td></tr>
+    <tr><td>25 001 et 50 000 Ar</td><td style="text-align:right">500</td><td style="text-align:right">650</td><td style="text-align:right"><b>1 150</b></td><td style="text-align:right"><b>2 000</b></td></tr>
+    <tr><td>50 001 et 100 000 Ar</td><td style="text-align:right">500</td><td style="text-align:right">1 300</td><td style="text-align:right"><b>1 800</b></td><td style="text-align:right"><b>2 000</b></td></tr>
+    <tr><td>100 001 et 250 000 Ar</td><td style="text-align:right">1 000</td><td style="text-align:right">1 900</td><td style="text-align:right"><b>2 900</b></td><td style="text-align:right"><b>3 000</b></td></tr>
+    <tr><td>250 001 et 500 000 Ar</td><td style="text-align:right">1 900</td><td style="text-align:right">3 400</td><td style="text-align:right"><b>5 300</b></td><td style="text-align:right"><b>6 000</b></td></tr>
+    <tr><td>500 001 et 1 000 000 Ar</td><td style="text-align:right">3 200</td><td style="text-align:right">4 700</td><td style="text-align:right"><b>7 900</b></td><td style="text-align:right"><b>8 000</b></td></tr>
+    <tr><td>1 000 001 et 2 000 000 Ar</td><td style="text-align:right">3 800</td><td style="text-align:right">8 800</td><td style="text-align:right"><b>12 600</b></td><td style="text-align:right"><b>13 000</b></td></tr>
+    <tr><td>2 000 001 et 3 000 000 Ar</td><td style="text-align:right">5 000</td><td style="text-align:right">14 700</td><td style="text-align:right"><b>19 700</b></td><td style="text-align:right"><b>20 000</b></td></tr>
+    <tr><td>3 000 001 et 4 000 000 Ar</td><td style="text-align:right">6 300</td><td style="text-align:right">19 600</td><td style="text-align:right"><b>25 900</b></td><td style="text-align:right"><b>26 000</b></td></tr>
+    <tr><td>4 000 001 et 5 000 000 Ar</td><td style="text-align:right">7 500</td><td style="text-align:right">24 500</td><td style="text-align:right"><b>32 000</b></td><td style="text-align:right"><b>32 000</b></td></tr>
+    <tr><td>5 000 001 et 6 000 000 Ar</td><td style="text-align:right">9 400</td><td style="text-align:right">29 400</td><td style="text-align:right"><b>38 800</b></td><td style="text-align:right"><b>39 000</b></td></tr>
+    <tr><td>6 000 001 et 7 000 000 Ar</td><td style="text-align:right">10 700</td><td style="text-align:right">34 300</td><td style="text-align:right"><b>45 000</b></td><td style="text-align:right"><b>45 000</b></td></tr>
+    <tr><td>7 000 001 et 8 000 000 Ar</td><td style="text-align:right">12 500</td><td style="text-align:right">39 200</td><td style="text-align:right"><b>51 700</b></td><td style="text-align:right"><b>52 000</b></td></tr>
+    <tr><td>8 000 001 et 9 000 000 Ar</td><td style="text-align:right">14 400</td><td style="text-align:right">44 100</td><td style="text-align:right"><b>58 500</b></td><td style="text-align:right"><b>59 000</b></td></tr>
+    <tr><td>9 000 001 et 10 000 000 Ar</td><td style="text-align:right">15 700</td><td style="text-align:right">49 000</td><td style="text-align:right"><b>64 700</b></td><td style="text-align:right"><b>65 000</b></td></tr>
+    <tr><td>10 000 001 et 11 000 000 Ar</td><td style="text-align:right">17 500</td><td style="text-align:right">53 900</td><td style="text-align:right"><b>71 400</b></td><td style="text-align:right"><b>72 000</b></td></tr>
+    <tr><td>11 000 001 et 12 000 000 Ar</td><td style="text-align:right">18 800</td><td style="text-align:right">59 000</td><td style="text-align:right"><b>77 800</b></td><td style="text-align:right"><b>78 000</b></td></tr>
+    <tr><td>12 000 001 et 13 000 000 Ar</td><td style="text-align:right">20 000</td><td style="text-align:right">64 000</td><td style="text-align:right"><b>84 000</b></td><td style="text-align:right"><b>84 000</b></td></tr>
+    <tr><td>13 000 001 et 14 000 000 Ar</td><td style="text-align:right">21 300</td><td style="text-align:right">69 000</td><td style="text-align:right"><b>90 300</b></td><td style="text-align:right"><b>91 000</b></td></tr>
+    <tr><td>14 000 001 et 15 000 000 Ar</td><td style="text-align:right">23 200</td><td style="text-align:right">74 000</td><td style="text-align:right"><b>97 200</b></td><td style="text-align:right"><b>98 000</b></td></tr>
+    <tr><td>15 000 001 et 16 000 000 Ar</td><td style="text-align:right">25 000</td><td style="text-align:right">79 000</td><td style="text-align:right"><b>104 000</b></td><td style="text-align:right"><b>104 000</b></td></tr>
+    <tr><td>16 000 001 et 17 000 000 Ar</td><td style="text-align:right">26 300</td><td style="text-align:right">84 000</td><td style="text-align:right"><b>110 300</b></td><td style="text-align:right"><b>111 000</b></td></tr>
+    <tr><td>17 000 001 et 18 000 000 Ar</td><td style="text-align:right">28 200</td><td style="text-align:right">89 000</td><td style="text-align:right"><b>117 200</b></td><td style="text-align:right"><b>118 000</b></td></tr>
+    <tr><td>18 000 001 et 19 000 000 Ar</td><td style="text-align:right">30 000</td><td style="text-align:right">94 000</td><td style="text-align:right"><b>124 000</b></td><td style="text-align:right"><b>124 000</b></td></tr>
+    <tr><td>19 000 001 et 20 000 000 Ar</td><td style="text-align:right">31 300</td><td style="text-align:right">100 000</td><td style="text-align:right"><b>131 300</b></td><td style="text-align:right"><b>132 000</b></td></tr>
+  </table>
+  <div class="note ok"><b>Exemples (RG9 + RG10)</b> : un parent verse <b>300 000 Ar</b> par MVola → tranche « 250 001 – 500 000 » :
+  envoi 1 900 + retrait 3 400 = 5 300 → arrondi au millier supérieur = <b>6 000 Ar</b> inscrits dans « Transferts ».
+  Autre exemple du client : frais cumulés de <b>6 572 Ar</b> → arrondis à <b>7 000 Ar</b>.
+  Le total encaissé « réel » reste Σ Sommes ; les frais n'y sont ajoutés que pour le calcul du Reste (RG4), conformément au classeur.</div>
+</section>
+
+<footer style="text-align:center;color:#64748b;font-size:12.5px;margin-top:26px">
+  CotiScola — Dossier de conception technique v1.1 · 12 septembre 2026 · React · Node/Express · PostgreSQL · PDF · Email · Barème MVola<br>
+  Document de conception — toute évolution des règles RG1→RG11 fera l'objet d'une mise à jour (v1.2)
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "cotiscola",
+  "version": "1.0.0",
+  "description": "Gestion des cotisations des parents d'eleves - React + Express + PostgreSQL + PDF + Email",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "db:init": "node backend/scripts/init-db.js",
+    "db:import": "node backend/scripts/import-excel.js",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend start"
+  }
+}
