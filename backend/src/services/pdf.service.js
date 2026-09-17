@@ -9,9 +9,10 @@ import { AppError } from '../utils/appError.js';
 let navigateur = null;
 async function getNavigateur() {
   if (!navigateur) {
+    // ✅ Utilise puppeteer.executablePath() qui trouve Chrome automatiquement
     navigateur = await puppeteer.launch({
       headless: 'new',
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
