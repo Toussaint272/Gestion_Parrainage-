@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 // Base relative : le serveur Vite proxifie /api vers le backend Express (port 5000).
-const api = axios.create({ baseURL: '/api/v1', timeout: 60000 });
-
+const api = axios.create({
+  baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}`,
+  timeout: 60000,
+});
 // Session expirée → retour à la page de connexion (sauf sur la requête de login elle-même).
 api.interceptors.response.use(
   (r) => r,
